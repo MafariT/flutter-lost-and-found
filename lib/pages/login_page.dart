@@ -20,9 +20,7 @@ class LoginPage extends StatelessWidget {
       showDialog(
         // ignore: use_build_context_synchronously
         context: context,
-        builder: (context) => AlertDialog(
-          title: Text(e.toString()),
-        ),
+        builder: (context) => AlertDialog(title: Text(e.toString())),
       );
     }
   }
@@ -36,7 +34,7 @@ class LoginPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              Icons.message,
+              Icons.search,
               size: 64,
               color: Theme.of(context).colorScheme.primary,
             ),
@@ -44,7 +42,7 @@ class LoginPage extends StatelessWidget {
             const SizedBox(height: 36),
 
             Text(
-              "Welcome Back!",
+              "Lost and Found",
               style: TextStyle(
                 fontSize: 16,
                 color: Theme.of(context).colorScheme.primary,
@@ -54,6 +52,7 @@ class LoginPage extends StatelessWidget {
             const SizedBox(height: 24),
 
             PrimaryTextfield(
+              label: "Email",
               hintText: "Email",
               obscureText: false,
               controller: _emailController,
@@ -62,6 +61,7 @@ class LoginPage extends StatelessWidget {
             const SizedBox(height: 12),
 
             PrimaryTextfield(
+              label: "Password",
               hintText: "Password",
               obscureText: true,
               controller: _passwordController,
@@ -69,10 +69,7 @@ class LoginPage extends StatelessWidget {
 
             const SizedBox(height: 24),
 
-            PrimaryButton(
-              text: "Login",
-              onTap: () => login(context),
-            ),
+            PrimaryButton(text: "Login", onTap: () => login(context)),
 
             const SizedBox(height: 24),
 
@@ -80,7 +77,7 @@ class LoginPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  "Don't have an account yet? ",
+                  "Belum punya akun? ",
                   style: TextStyle(
                     fontSize: 16,
                     color: Theme.of(context).colorScheme.primary,
@@ -89,7 +86,7 @@ class LoginPage extends StatelessWidget {
                 GestureDetector(
                   onTap: onTap,
                   child: Text(
-                    "Create now",
+                    "Buat disini",
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,

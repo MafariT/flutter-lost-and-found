@@ -5,11 +5,15 @@ class PrimaryTextfield extends StatelessWidget {
     super.key,
     required this.hintText,
     required this.obscureText,
+    required this.label,
     required this.controller,
+    this.readOnly = false,
     this.focusNode,
   });
   final String hintText;
   final bool obscureText;
+  final String label;
+  final bool readOnly;
   final TextEditingController controller;
   final FocusNode? focusNode;
 
@@ -31,11 +35,13 @@ class PrimaryTextfield extends StatelessWidget {
               color: Theme.of(context).colorScheme.primary,
             ),
           ),
+          label: Text(label),
           fillColor: Theme.of(context).colorScheme.secondary,
           filled: true,
           hintText: hintText,
           hintStyle: TextStyle(color: Theme.of(context).colorScheme.primary),
         ),
+        readOnly: readOnly ,
       ),
     );
   }

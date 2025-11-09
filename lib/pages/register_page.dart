@@ -4,14 +4,12 @@ import 'package:flutter_lost_and_found/components/primary_text_field.dart';
 import 'package:flutter/material.dart';
 
 class RegisterPage extends StatelessWidget {
-  RegisterPage({
-    super.key,
-    required this.onTap,
-  });
+  RegisterPage({super.key, required this.onTap});
   final void Function()? onTap;
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
   final AuthService _auth = AuthService();
 
   void register(BuildContext context) async {
@@ -26,18 +24,15 @@ class RegisterPage extends StatelessWidget {
         showDialog(
           // ignore: use_build_context_synchronously
           context: context,
-          builder: (context) => AlertDialog(
-            title: Text(e.toString()),
-          ),
+          builder: (context) => AlertDialog(title: Text(e.toString())),
         );
       }
     } else {
       showDialog(
         // ignore: use_build_context_synchronously
         context: context,
-        builder: (context) => const AlertDialog(
-          title: Text("Password Doesn't match!"),
-        ),
+        builder: (context) =>
+            const AlertDialog(title: Text("Password Doesn't match!")),
       );
     }
   }
@@ -51,7 +46,7 @@ class RegisterPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              Icons.message,
+              Icons.search,
               size: 64,
               color: Theme.of(context).colorScheme.primary,
             ),
@@ -59,7 +54,7 @@ class RegisterPage extends StatelessWidget {
             const SizedBox(height: 36),
 
             Text(
-              "Let's Create an account for you!",
+              "Lost and Found",
               style: TextStyle(
                 fontSize: 16,
                 color: Theme.of(context).colorScheme.primary,
@@ -69,6 +64,7 @@ class RegisterPage extends StatelessWidget {
             const SizedBox(height: 24),
 
             PrimaryTextfield(
+              label: "Email",
               hintText: "Email",
               obscureText: false,
               controller: _emailController,
@@ -77,6 +73,7 @@ class RegisterPage extends StatelessWidget {
             const SizedBox(height: 12),
 
             PrimaryTextfield(
+              label: "Password",
               hintText: "Password",
               obscureText: true,
               controller: _passwordController,
@@ -84,6 +81,7 @@ class RegisterPage extends StatelessWidget {
             const SizedBox(height: 12),
 
             PrimaryTextfield(
+              label: "Confirm password",
               hintText: "Confirm password",
               obscureText: true,
               controller: _confirmPasswordController,
@@ -91,10 +89,7 @@ class RegisterPage extends StatelessWidget {
 
             const SizedBox(height: 24),
 
-            PrimaryButton(
-              text: "Register",
-              onTap: () => register(context),
-            ),
+            PrimaryButton(text: "Register", onTap: () => register(context)),
 
             const SizedBox(height: 24),
 
@@ -102,7 +97,7 @@ class RegisterPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  "Already have an account? ",
+                  "Sudah punya akun? ",
                   style: TextStyle(
                     fontSize: 16,
                     color: Theme.of(context).colorScheme.primary,
@@ -111,7 +106,7 @@ class RegisterPage extends StatelessWidget {
                 GestureDetector(
                   onTap: onTap,
                   child: Text(
-                    "Login now",
+                    "Masuk disini",
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,

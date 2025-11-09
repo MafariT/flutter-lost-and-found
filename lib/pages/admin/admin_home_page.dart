@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_lost_and_found/pages/profile_page.dart';
 import 'package:flutter_lost_and_found/services/auth/auth_service.dart';
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+class AdminHomePage extends StatelessWidget {
+  const AdminHomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -12,18 +11,9 @@ class HomePage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         foregroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text("User HomePage"),
+        title: const Text("Admin HomePage"),
         centerTitle: true,
         actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const ProfilePage()),
-              );
-            },
-            icon: const Icon(Icons.person),
-          ),
           IconButton(
             onPressed: () {
               AuthService().signOut();
@@ -32,7 +22,7 @@ class HomePage extends StatelessWidget {
           ),
         ],
       ),
-      body: const Center(child: Text("Selamat Datang, User!")),
+      body: const Center(child: Text("Welcome, Admin!")),
     );
   }
 }

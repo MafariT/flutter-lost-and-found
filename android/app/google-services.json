@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "387841133536",
+    "project_id": "lost-and-found-flutter-5b7d2",
+    "storage_bucket": "lost-and-found-flutter-5b7d2.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:387841133536:android:1371e35929e5540479b985",
+        "android_client_info": {
+          "package_name": "com.example.flutter_lost_and_found"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAbsjKnLAz95gckmYvFOSM_v_fyIIJgnBs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

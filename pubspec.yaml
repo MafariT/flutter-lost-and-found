@@ -10,6 +10,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_dotenv: ^6.0.0
+  image_picker: ^1.2.1
   provider: ^6.1.5+1
   supabase_flutter: ^2.10.3
 
@@ -21,4 +22,5 @@ dev_dependencies:
 flutter:
   assets:
     - .env
+    - assets/images/
   uses-material-design: true

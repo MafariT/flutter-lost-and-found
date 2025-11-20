@@ -1,5 +1,3 @@
-// file: lib/pages/add_item_page.dart
-
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_lost_and_found/main.dart';
@@ -64,12 +62,15 @@ class _AddItemPageState extends State<AddItemPage> {
     });
 
     try {
+      final String submissionStatus = _status == 'lost'
+          ? 'lost'
+          : 'unverified_found';
       final imageUrl = await _uploadImage();
       final data = {
         'item_name': _nameController.text.trim(),
         'description': _descriptionController.text.trim(),
         'location': _locationController.text.trim(),
-        'status': _status,
+        'status': submissionStatus,
         'image_url': imageUrl,
         'user_id': supabase.auth.currentUser!.id,
       };

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_lost_and_found/main.dart';
 import 'package:flutter_lost_and_found/pages/admin/admin_home_page.dart';
 import 'package:flutter_lost_and_found/pages/home_page.dart';
+import 'package:flutter_lost_and_found/pages/perantara/perantara_home_page.dart';
 
 class RoleGate extends StatelessWidget {
   const RoleGate({super.key});
@@ -18,11 +19,15 @@ class RoleGate extends StatelessWidget {
       future: supabase.from('profiles').select().eq('id', uid).single(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Scaffold(body: Center(child: CircularProgressIndicator()));
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
         }
 
         if (snapshot.hasError) {
-          return Scaffold(body: Center(child: Text("Error: ${snapshot.error}")));
+          return Scaffold(
+            body: Center(child: Text("Error: ${snapshot.error}")),
+          );
         }
 
         if (snapshot.hasData) {
@@ -33,12 +38,15 @@ class RoleGate extends StatelessWidget {
             case 'admin':
               return AdminHomePage();
             case 'perantara':
+              return PerantaraHomePage();
             case 'user':
               return HomePage();
           }
         }
-        
-        return const Scaffold(body: Center(child: Text("User data not found.")));
+
+        return const Scaffold(
+          body: Center(child: Text("User data not found.")),
+        );
       },
     );
   }

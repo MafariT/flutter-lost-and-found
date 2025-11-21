@@ -1,47 +1,65 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_lost_and_found/main.dart';
 import 'package:flutter_lost_and_found/pages/profile_page.dart';
+import 'package:flutter_lost_and_found/providers/user_provider.dart';
 import 'package:flutter_lost_and_found/services/auth/auth_service.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class AppDrawer extends StatelessWidget {
+class AppDrawer extends ConsumerWidget {
   const AppDrawer({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final User? user = supabase.auth.currentUser;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final profileAsyncValue = ref.watch(userProfileProvider);
 
     return Drawer(
       backgroundColor: Theme.of(context).colorScheme.surface,
       child: ListView(
         padding: EdgeInsets.zero,
         children: <Widget>[
-          DrawerHeader(
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.secondary,
+          profileAsyncValue.when(
+            data: (profile) {
+              final avatarUrl = profile['avatar_url'];
+              final name = profile['name'];
+              final email = profile['email'];
+
+              return DrawerHeader(
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.secondary,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    CircleAvatar(
+                      radius: 30,
+                      backgroundColor: Theme.of(context).colorScheme.tertiary,
+                      backgroundImage: (avatarUrl != null) ? NetworkImage(avatarUrl) : null,
+                      child: (avatarUrl == null) ? const Icon(Icons.person, size: 40) : null,
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      name ?? email,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.inversePrimary,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+            loading: () => DrawerHeader(
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.secondary,
+              ),
+              child: const Center(child: CircularProgressIndicator()),
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                CircleAvatar(
-                  radius: 30,
-                  backgroundColor: Theme.of(context).colorScheme.tertiary,
-                  child: Icon(
-                    Icons.person,
-                    size: 40,
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  user?.email ?? 'user@example.com',
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.inversePrimary,
-                    fontSize: 16,
-                  ),
-                ),
-              ],
+            error: (error, stackTrace) => DrawerHeader(
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.secondary,
+              ),
+              child: const Center(child: Text('Error loading profile')),
             ),
           ),
           ListTile(

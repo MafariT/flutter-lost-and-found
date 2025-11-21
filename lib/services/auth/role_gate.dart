@@ -12,10 +12,10 @@ class RoleGate extends StatelessWidget {
     final user = supabase.auth.currentUser;
 
     if (user == null) {
-      return const Scaffold(body: Center(child: Text("Not logged in.")));
+      return const Scaffold(body: Center(child: Text("Not logged in")));
     }
 
-    final String role = user.userMetadata?['role'] ?? 'user';
+    final String role = user.appMetadata['role'] ?? 'user';
 
     switch (role) {
       case 'admin':
@@ -25,9 +25,7 @@ class RoleGate extends StatelessWidget {
       case 'user':
         return const HomePage();
       default:
-        return const Scaffold(
-          body: Center(child: Text("Role not recognized...")),
-        );
+        return const HomePage();
     }
   }
 }

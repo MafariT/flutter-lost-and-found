@@ -1,142 +1,167 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_lost_and_found/main.dart';
+import 'dart:io';
 import 'package:flutter_lost_and_found/components/primary_text_field.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_lost_and_found/components/primary_button.dart';
+import 'package:flutter_lost_and_found/providers/profile_controller.dart';
+import 'package:flutter_lost_and_found/providers/user_provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
 
-class ProfilePage extends StatefulWidget {
+class ProfilePage extends ConsumerStatefulWidget {
   const ProfilePage({super.key});
 
   @override
-  State<ProfilePage> createState() => _ProfilePageState();
+  ConsumerState<ProfilePage> createState() => _ProfilePageState();
 }
 
-class _ProfilePageState extends State<ProfilePage> {
+class _ProfilePageState extends ConsumerState<ProfilePage> {
   final _nameController = TextEditingController();
   final _nimController = TextEditingController();
-  final _emailController = TextEditingController();
-  bool _isLoading = true;
+  final _facultyController = TextEditingController();
+  final _programStudyController = TextEditingController();
 
-  @override
-  void initState() {
-    super.initState();
-    _getProfile();
-  }
+  File? _imageFile;
+  bool _controllersInitialized = false;
 
   @override
   void dispose() {
     _nameController.dispose();
     _nimController.dispose();
-    _emailController.dispose();
+    _facultyController.dispose();
+    _programStudyController.dispose();
     super.dispose();
   }
 
-  Future<void> _getProfile() async {
-    setState(() {
-      _isLoading = true;
-    });
-    try {
-      final userId = supabase.auth.currentUser!.id;
-      final data = await supabase
-          .from('profiles')
-          .select()
-          .eq('id', userId)
-          .single();
-      _nameController.text = (data['name'] as String?) ?? '';
-      _nimController.text = (data['nim'] as String?) ?? '';
-      _emailController.text = (data['email'] as String?) ?? '';
-    } catch (error) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Error fetching profile: ${error.toString()}'),
-            backgroundColor: Theme.of(context).colorScheme.error,
-          ),
-        );
-      }
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-      }
+  Future<void> _pickImage() async {
+    final pickedFile = await ImagePicker().pickImage(
+      source: ImageSource.gallery,
+      imageQuality: 80,
+    );
+    if (pickedFile != null) {
+      setState(() {
+        _imageFile = File(pickedFile.path);
+      });
     }
   }
 
-  Future<void> _updateProfile() async {
-    setState(() {
-      _isLoading = true;
-    });
+ void _updateProfile() async {
     try {
-      final userId = supabase.auth.currentUser!.id;
-      final name = _nameController.text.trim();
-      final nim = _nimController.text.trim();
-      await supabase
-          .from('profiles')
-          .update({'name': name, 'nim': nim})
-          .eq('id', userId);
+      await ref.read(profileControllerProvider.notifier).updateProfile(
+            name: _nameController.text,
+            nim: _nimController.text,
+            faculty: _facultyController.text,
+            programStudy: _programStudyController.text,
+            imageFile: _imageFile,
+          );
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Profile updated successfully!')),
-        );
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Profile updated successfully!'),
+          backgroundColor: Colors.green,
+        ));
       }
-    } catch (error) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Error updating profile: ${error.toString()}'),
-            backgroundColor: Theme.of(context).colorScheme.error,
-          ),
-        );
-      }
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
+      ref.invalidate(userProfileProvider);
+
+    } catch (e) {
+       if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('Error: $e'),
+          backgroundColor: Colors.red,
+        ));
       }
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final userProfile = ref.watch(userProfileProvider);
+    final controllerState = ref.watch(profileControllerProvider);
+    final isLoading = controllerState is AsyncLoading;
+
     return Scaffold(
-      appBar: AppBar(title: const Text('Profile')),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : ListView(
-              padding: const EdgeInsets.symmetric(vertical: 30),
-              children: [
-                PrimaryTextfield(
-                  label: "Email",
-                  hintText: 'Email',
-                  obscureText: false,
-                  readOnly: true,
-                  controller: _emailController,
-                ),
-                const SizedBox(height: 20),
+      appBar: AppBar(title: const Text('Edit Profile')),
+      body: userProfile.when(
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (err, stack) => Center(child: Text('Error: $err')),
+        data: (profile) {
+          if (!_controllersInitialized) {
+            _nameController.text = profile['name'] ?? '';
+            _nimController.text = profile['nim'] ?? '';
+            _facultyController.text = profile['faculty'] ?? '';
+            _programStudyController.text = profile['program_study'] ?? '';
+            _controllersInitialized = true;
+          }
+          final avatarUrl = profile['avatar_url'];
 
-                PrimaryTextfield(
-                  label: "Name",
-                  hintText: 'Name',
-                  obscureText: false,
-                  controller: _nameController,
+          return ListView(
+            padding: const EdgeInsets.symmetric(vertical: 20),
+            children: [
+              Center(
+                child: Stack(
+                  children: [
+                    CircleAvatar(
+                      radius: 60,
+                      backgroundImage: _imageFile != null
+                          ? FileImage(_imageFile!)
+                          : (avatarUrl != null ? NetworkImage(avatarUrl) : null)
+                                as ImageProvider?,
+                      child: (avatarUrl == null && _imageFile == null)
+                          ? const Icon(Icons.person, size: 60)
+                          : null,
+                    ),
+                    Positioned(
+                      bottom: 0,
+                      right: 0,
+                      child: CircleAvatar(
+                        radius: 20,
+                        backgroundColor: Theme.of(
+                          context,
+                        ).colorScheme.secondary,
+                        child: IconButton(
+                          icon: const Icon(Icons.camera_alt, size: 22),
+                          onPressed: isLoading ? null : _pickImage,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 20),
-
-                PrimaryTextfield(
-                  label: "NIM",
-                  hintText: 'NIM',
-                  obscureText: false,
-                  controller: _nimController,
-                ),
-                const SizedBox(height: 30),
-
-                PrimaryButton(
-                  text: 'Update Profile',
-                  onTap: _isLoading ? null : _updateProfile,
-                ),
-              ],
-            ),
+              ),
+              const SizedBox(height: 30),
+              PrimaryTextfield(
+                label: "Name",
+                hintText: "Enter your name",
+                obscureText: false,
+                controller: _nameController,
+              ),
+              const SizedBox(height: 12),
+              PrimaryTextfield(
+                label: "NIM",
+                hintText: "Enter your NIM",
+                obscureText: false,
+                controller: _nimController,
+              ),
+              const SizedBox(height: 12),
+              PrimaryTextfield(
+                label: "Faculty",
+                hintText: "Enter your faculty",
+                obscureText: false,
+                controller: _facultyController,
+              ),
+              const SizedBox(height: 12),
+              PrimaryTextfield(
+                label: "Program Study",
+                hintText: "Enter your Program Study",
+                obscureText: false,
+                controller: _programStudyController,
+              ),
+              const SizedBox(height: 30),
+              PrimaryButton(
+                text: isLoading ? "Updating..." : "Update Profile",
+                onTap: _updateProfile,
+              ),
+            ],
+          );
+        },
+      ),
     );
   }
 }

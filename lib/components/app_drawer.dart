@@ -18,9 +18,9 @@ class AppDrawer extends ConsumerWidget {
         children: <Widget>[
           profileAsyncValue.when(
             data: (profile) {
-              final avatarUrl = profile['avatar_url'];
-              final name = profile['name'];
-              final email = profile['email'];
+              final avatarUrl = profile?['avatar_url'];
+              final name = profile?['name'];
+              final email = profile?['email'];
 
               return DrawerHeader(
                 decoration: BoxDecoration(

@@ -44,9 +44,11 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
     }
   }
 
- void _updateProfile() async {
+  void _updateProfile() async {
     try {
-      await ref.read(profileControllerProvider.notifier).updateProfile(
+      await ref
+          .read(profileControllerProvider.notifier)
+          .updateProfile(
             name: _nameController.text,
             nim: _nimController.text,
             faculty: _facultyController.text,
@@ -54,19 +56,19 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
             imageFile: _imageFile,
           );
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('Profile updated successfully!'),
-          backgroundColor: Colors.green,
-        ));
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Profile updated successfully!'),
+            backgroundColor: Colors.green,
+          ),
+        );
       }
       ref.invalidate(userProfileProvider);
-
     } catch (e) {
-       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Error: $e'),
-          backgroundColor: Colors.red,
-        ));
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: $e'), backgroundColor: Colors.red),
+        );
       }
     }
   }
@@ -84,13 +86,13 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
         error: (err, stack) => Center(child: Text('Error: $err')),
         data: (profile) {
           if (!_controllersInitialized) {
-            _nameController.text = profile['name'] ?? '';
-            _nimController.text = profile['nim'] ?? '';
-            _facultyController.text = profile['faculty'] ?? '';
-            _programStudyController.text = profile['program_study'] ?? '';
+            _nameController.text = profile?['name'] ?? '';
+            _nimController.text = profile?['nim'] ?? '';
+            _facultyController.text = profile?['faculty'] ?? '';
+            _programStudyController.text = profile?['program_study'] ?? '';
             _controllersInitialized = true;
           }
-          final avatarUrl = profile['avatar_url'];
+          final avatarUrl = profile?['avatar_url'];
 
           return ListView(
             padding: const EdgeInsets.symmetric(vertical: 20),
@@ -156,6 +158,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
               const SizedBox(height: 30),
               PrimaryButton(
                 text: isLoading ? "Updating..." : "Update Profile",
+                color: Theme.of(context).colorScheme.inversePrimary,
                 onTap: _updateProfile,
               ),
             ],

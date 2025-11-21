@@ -27,9 +27,9 @@ class ItemCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // --- IMAGE ---
-            (imageUrl != null && imageUrl!.isNotEmpty)
+            (imageUrl != null && imageUrl.isNotEmpty)
                 ? Image.network(
-                    imageUrl!,
+                    imageUrl,
                     height: 200,
                     width: double.infinity,
                     fit: BoxFit.cover,

@@ -9,45 +9,25 @@ class RoleGate extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String? uid = supabase.auth.currentUser?.id;
+    final user = supabase.auth.currentUser;
 
-    if (uid == null) {
-      return const Scaffold(body: Center(child: Text("Error: Not logged in.")));
+    if (user == null) {
+      return const Scaffold(body: Center(child: Text("Not logged in.")));
     }
 
-    return FutureBuilder<Map<String, dynamic>>(
-      future: supabase.from('profiles').select().eq('id', uid).single(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Scaffold(
-            body: Center(child: CircularProgressIndicator()),
-          );
-        }
+    final String role = user.userMetadata?['role'] ?? 'user';
 
-        if (snapshot.hasError) {
-          return Scaffold(
-            body: Center(child: Text("Error: ${snapshot.error}")),
-          );
-        }
-
-        if (snapshot.hasData) {
-          final data = snapshot.data!;
-          final String role = data['role'] ?? 'user';
-
-          switch (role) {
-            case 'admin':
-              return AdminHomePage();
-            case 'perantara':
-              return PerantaraHomePage();
-            case 'user':
-              return HomePage();
-          }
-        }
-
+    switch (role) {
+      case 'admin':
+        return const AdminHomePage();
+      case 'perantara':
+        return const PerantaraHomePage();
+      case 'user':
+        return const HomePage();
+      default:
         return const Scaffold(
-          body: Center(child: Text("User data not found.")),
+          body: Center(child: Text("Role not recognized...")),
         );
-      },
-    );
+    }
   }
 }

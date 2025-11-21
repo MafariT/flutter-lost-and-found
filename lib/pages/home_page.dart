@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_lost_and_found/components/app_drawer.dart';
 import 'package:flutter_lost_and_found/pages/add_item_page.dart';
-import 'package:flutter_lost_and_found/pages/feeds/found_item_feed.dart';
-import 'package:flutter_lost_and_found/pages/feeds/lost_item_feed.dart';
+import 'package:flutter_lost_and_found/pages/feeds/items_feed.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -15,8 +14,8 @@ class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
 
   static final List<Widget> _widgetOptions = <Widget>[
-    const LostItemFeed(),
-    const FoundItemFeed(),
+    const ItemsFeed(key: ValueKey('lost_feed'), status: 'lost'),
+    const ItemsFeed(key: ValueKey('found_feed'), status: 'found'),
   ];
 
   void _onItemTapped(int index) {

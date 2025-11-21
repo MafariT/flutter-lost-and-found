@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter_lost_and_found/providers/auth_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_lost_and_found/main.dart';
 
@@ -34,6 +35,7 @@ class ClaimsController extends AsyncNotifier<void> {
 }
 
 final claimStatusProvider = FutureProvider.family<String, String>((ref, itemId) async {
+  ref.watch(authStateProvider);
   final currentUser = supabase.auth.currentUser;
   final item = await supabase.from('items').select('status, user_id').eq('id', itemId).single();
   final itemStatus = item['status'];

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_lost_and_found/providers/claims_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 
 class ItemDetailPage extends ConsumerWidget {
@@ -69,8 +70,9 @@ class ItemDetailPage extends ConsumerWidget {
 
     String formattedDate = 'Date not available';
     if (createdAt.isNotEmpty) {
-      final parsedDate = DateTime.parse(createdAt);
-      formattedDate = DateFormat.yMMMMd().add_jm().format(parsedDate);
+      initializeDateFormatting('id', null);
+      final parsedDate = DateTime.parse(createdAt).toUtc().add(const Duration(hours: 7)); // UTC+7
+      formattedDate = formattedDate = DateFormat('EEEE, dd MMMM yyyy - HH:mm WIB', 'id').format(parsedDate);
     }
 
     return Scaffold(
@@ -80,17 +82,8 @@ class ItemDetailPage extends ConsumerWidget {
             expandedHeight: 300.0,
             pinned: true,
             flexibleSpace: FlexibleSpaceBar(
-              title: Text(
-                itemName,
-                style: const TextStyle(shadows: [Shadow(color: Colors.black54, blurRadius: 8)]),
-              ),
               background: (imageUrl != null && imageUrl.isNotEmpty)
-                  ? Image.network(
-                      imageUrl,
-                      fit: BoxFit.cover,
-                      color: Colors.black.withOpacity(0.3),
-                      colorBlendMode: BlendMode.darken,
-                    )
+                  ? Image.network(imageUrl, fit: BoxFit.cover)
                   : Container(
                       color: Theme.of(context).colorScheme.secondary,
                       child: const Center(child: Icon(Icons.image_not_supported, size: 60)),
@@ -103,7 +96,7 @@ class ItemDetailPage extends ConsumerWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('Description', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                  Text(itemName, style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
                   const SizedBox(height: 8),
                   Text(description, style: const TextStyle(fontSize: 16, height: 1.5)),
                   const Divider(height: 40),

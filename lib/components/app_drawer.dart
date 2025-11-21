@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_lost_and_found/pages/profile_page.dart';
+import 'package:flutter_lost_and_found/pages/settings_page.dart';
 import 'package:flutter_lost_and_found/providers/user_provider.dart';
 import 'package:flutter_lost_and_found/services/auth/auth_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -23,9 +24,7 @@ class AppDrawer extends ConsumerWidget {
               final email = profile?['email'];
 
               return DrawerHeader(
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.secondary,
-                ),
+                decoration: BoxDecoration(color: Theme.of(context).colorScheme.secondary),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.end,
@@ -50,15 +49,11 @@ class AppDrawer extends ConsumerWidget {
               );
             },
             loading: () => DrawerHeader(
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.secondary,
-              ),
+              decoration: BoxDecoration(color: Theme.of(context).colorScheme.secondary),
               child: const Center(child: CircularProgressIndicator()),
             ),
             error: (error, stackTrace) => DrawerHeader(
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.secondary,
-              ),
+              decoration: BoxDecoration(color: Theme.of(context).colorScheme.secondary),
               child: const Center(child: Text('Error loading profile')),
             ),
           ),
@@ -67,10 +62,7 @@ class AppDrawer extends ConsumerWidget {
             title: const Text('Profile'),
             onTap: () {
               Navigator.pop(context);
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const ProfilePage()),
-              );
+              Navigator.push(context, MaterialPageRoute(builder: (context) => const ProfilePage()));
             },
           ),
           ListTile(
@@ -79,6 +71,14 @@ class AppDrawer extends ConsumerWidget {
             onTap: () {
               // TODO: Navigate to history page
               Navigator.pop(context);
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.settings_outlined),
+            title: const Text('Settings'),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(context, MaterialPageRoute(builder: (context) => const SettingsPage()));
             },
           ),
           const Divider(),

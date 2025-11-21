@@ -8,32 +8,24 @@ class RegisterPage extends StatelessWidget {
   final void Function()? onTap;
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController =
-      TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
   final AuthService _auth = AuthService();
 
   void register(BuildContext context) async {
     if (_passwordController.text == _confirmPasswordController.text) {
       try {
-        await _auth.signUpWithEmailPassword(
-          _emailController.text,
-          _passwordController.text,
-        );
+        await _auth.signUpWithEmailPassword(_emailController.text, _passwordController.text);
       } catch (e) {
         showDialog(
           // ignore: use_build_context_synchronously
           context: context,
-          builder: (context) => AlertDialog(
-            title: const Text("Registration Failed"),
-            content: Text(e.toString()),
-          ),
+          builder: (context) => AlertDialog(title: const Text("Registration Failed"), content: Text(e.toString())),
         );
       }
     } else {
       showDialog(
         context: context,
-        builder: (context) =>
-            const AlertDialog(title: Text("Passwords don't match!")),
+        builder: (context) => const AlertDialog(title: Text("Passwords don't match!")),
       );
     }
   }
@@ -62,19 +54,12 @@ class RegisterPage extends StatelessWidget {
                   CircleAvatar(
                     radius: 120,
                     backgroundColor: Colors.transparent,
-                    child: Image(
-                      image: AssetImage('assets/images/logo-clear.png'),
-                    ),
+                    child: Image(image: AssetImage('assets/images/logo-clear.png')),
                   ),
 
                   const SizedBox(height: 50),
 
-                  PrimaryTextfield(
-                    label: "Email",
-                    hintText: "Email",
-                    obscureText: false,
-                    controller: _emailController,
-                  ),
+                  PrimaryTextfield(label: "Email", hintText: "Email", obscureText: false, controller: _emailController),
 
                   const SizedBox(height: 12),
 
@@ -109,22 +94,13 @@ class RegisterPage extends StatelessWidget {
                     children: [
                       Text(
                         "Sudah punya akun? ",
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Theme.of(
-                            context,
-                          ).colorScheme.inversePrimary.withOpacity(0.8),
-                        ),
+                        style: TextStyle(fontSize: 16, color: Theme.of(context).colorScheme.inversePrimary),
                       ),
                       GestureDetector(
                         onTap: onTap,
                         child: Text(
                           "Masuk disini",
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.blue.shade400,
-                          ),
+                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.blue.shade400),
                         ),
                       ),
                     ],

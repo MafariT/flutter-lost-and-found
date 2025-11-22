@@ -31,7 +31,6 @@ class SettingsPage extends StatelessWidget {
             title: 'Change Password',
             subtitle: 'Update your login password',
             onTap: () {
-              // TODO: Implement Change Password functionality
               ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Feature coming soon!')));
             },
           ),
@@ -42,7 +41,6 @@ class SettingsPage extends StatelessWidget {
             title: 'Notifications',
             subtitle: 'Manage push notification preferences',
             onTap: () {
-              // TODO: Navigate to a dedicated Notification Settings page
               ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Feature coming soon!')));
             },
           ),
@@ -54,7 +52,6 @@ class SettingsPage extends StatelessWidget {
             title: 'Language',
             subtitle: 'Select your preferred language',
             onTap: () {
-              // TODO: Implement localization and language selection
               ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Feature coming soon!')));
             },
           ),
@@ -65,7 +62,6 @@ class SettingsPage extends StatelessWidget {
             title: 'Privacy Policy',
             subtitle: 'Read our data handling policies',
             onTap: () {
-              // TODO: Open a URL to your privacy policy
               ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Feature coming soon!')));
             },
           ),
@@ -74,7 +70,6 @@ class SettingsPage extends StatelessWidget {
             title: 'Help & Support',
             subtitle: 'Get help or report an issue',
             onTap: () {
-              // TODO: Open a support link or mailto
               ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Feature coming soon!')));
             },
           ),

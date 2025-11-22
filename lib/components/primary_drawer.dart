@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_lost_and_found/pages/history_page.dart';
 import 'package:flutter_lost_and_found/pages/profile_page.dart';
 import 'package:flutter_lost_and_found/pages/settings_page.dart';
 import 'package:flutter_lost_and_found/providers/user_provider.dart';
@@ -10,7 +11,7 @@ class PrimaryDrawer extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final profileAsyncValue = ref.watch(userProfileProvider);
+    final profileAsyncValue = ref.watch(userProvider);
 
     return Drawer(
       backgroundColor: Theme.of(context).colorScheme.surface,
@@ -69,8 +70,8 @@ class PrimaryDrawer extends ConsumerWidget {
             leading: const Icon(Icons.history),
             title: const Text('My History'),
             onTap: () {
-              // TODO: Navigate to history page
               Navigator.pop(context);
+              Navigator.push(context, MaterialPageRoute(builder: (context) => const HistoryPage()));
             },
           ),
           ListTile(

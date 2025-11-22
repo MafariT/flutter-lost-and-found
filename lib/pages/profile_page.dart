@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:flutter_lost_and_found/components/primary_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_lost_and_found/components/primary_button.dart';
-import 'package:flutter_lost_and_found/providers/profile_controller.dart';
 import 'package:flutter_lost_and_found/providers/user_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
@@ -33,10 +32,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
   }
 
   Future<void> _pickImage() async {
-    final pickedFile = await ImagePicker().pickImage(
-      source: ImageSource.gallery,
-      imageQuality: 80,
-    );
+    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery, imageQuality: 80);
     if (pickedFile != null) {
       setState(() {
         _imageFile = File(pickedFile.path);
@@ -47,7 +43,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
   void _updateProfile() async {
     try {
       await ref
-          .read(profileControllerProvider.notifier)
+          .read(userControllerProvider.notifier)
           .updateProfile(
             name: _nameController.text,
             nim: _nimController.text,
@@ -56,27 +52,22 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
             imageFile: _imageFile,
           );
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Profile updated successfully!'),
-            backgroundColor: Colors.green,
-          ),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Profile updated successfully!'), backgroundColor: Colors.green));
       }
-      ref.invalidate(userProfileProvider);
+      ref.invalidate(userProvider);
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: $e'), backgroundColor: Colors.red),
-        );
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e'), backgroundColor: Colors.red));
       }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final userProfile = ref.watch(userProfileProvider);
-    final controllerState = ref.watch(profileControllerProvider);
+    final userProfile = ref.watch(userProvider);
+    final controllerState = ref.watch(userControllerProvider);
     final isLoading = controllerState is AsyncLoading;
 
     return Scaffold(
@@ -104,20 +95,15 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                       radius: 60,
                       backgroundImage: _imageFile != null
                           ? FileImage(_imageFile!)
-                          : (avatarUrl != null ? NetworkImage(avatarUrl) : null)
-                                as ImageProvider?,
-                      child: (avatarUrl == null && _imageFile == null)
-                          ? const Icon(Icons.person, size: 60)
-                          : null,
+                          : (avatarUrl != null ? NetworkImage(avatarUrl) : null) as ImageProvider?,
+                      child: (avatarUrl == null && _imageFile == null) ? const Icon(Icons.person, size: 60) : null,
                     ),
                     Positioned(
                       bottom: 0,
                       right: 0,
                       child: CircleAvatar(
                         radius: 20,
-                        backgroundColor: Theme.of(
-                          context,
-                        ).colorScheme.secondary,
+                        backgroundColor: Theme.of(context).colorScheme.secondary,
                         child: IconButton(
                           icon: const Icon(Icons.camera_alt, size: 22),
                           onPressed: isLoading ? null : _pickImage,

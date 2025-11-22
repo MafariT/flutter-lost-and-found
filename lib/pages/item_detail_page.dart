@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_lost_and_found/providers/auth_provider.dart';
 import 'package:flutter_lost_and_found/providers/claims_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -45,6 +46,7 @@ class ItemDetailPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isGuest = ref.watch(isGuestProvider);
     final buttonState = ref.watch(claimStatusProvider(item['id'] as String));
     final claimsController = ref.read(claimsControllerProvider.notifier);
 
@@ -112,46 +114,54 @@ class ItemDetailPage extends ConsumerWidget {
       ),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: buttonState.when(
-          loading: () => const Center(child: CircularProgressIndicator()),
-          error: (err, stack) => Center(child: Text('Error: $err')),
-          data: (status) {
-            switch (status) {
-              case 'can_claim':
-                return _buildActionButton(
-                  context: context,
-                  text: 'Claim Item',
-                  onPressed: () => _showDialog(
-                    context,
-                    ref,
-                    title: 'Claim This Item',
-                    hint: 'e.g., "My wallet has a red sticker inside."',
-                    onSubmit: (message) =>
-                        claimsController.submitClaim(itemId: item['id'], finderId: item['user_id'], message: message),
-                  ),
-                );
-              case 'claim_pending':
-                return _buildDisabledButton(text: 'Claim Pending', icon: Icons.hourglass_top);
-              case 'can_contact':
-                return _buildActionButton(
-                  context: context,
-                  text: 'I Found This!',
-                  onPressed: () => _showDialog(
-                    context,
-                    ref,
-                    title: 'I Found This Item!',
-                    hint: 'e.g., "I think I found your wallet, contact me at..."',
-                    onSubmit: (message) =>
-                        claimsController.submitContact(itemId: item['id'], ownerId: item['user_id'], message: message),
-                  ),
-                );
-              case 'contacted':
-                return _buildDisabledButton(text: 'Owner Notified', icon: Icons.check_circle);
-              default:
-                return const SizedBox.shrink();
-            }
-          },
-        ),
+        child: isGuest
+            ? const SizedBox.shrink()
+            : buttonState.when(
+                loading: () => const Center(child: CircularProgressIndicator()),
+                error: (err, stack) => Center(child: Text('Error: $err')),
+                data: (status) {
+                  switch (status) {
+                    case 'can_claim':
+                      return _buildActionButton(
+                        context: context,
+                        text: 'Claim Item',
+                        onPressed: () => _showDialog(
+                          context,
+                          ref,
+                          title: 'Claim This Item',
+                          hint: 'e.g., "My wallet has a red sticker inside."',
+                          onSubmit: (message) => claimsController.submitClaim(
+                            itemId: item['id'],
+                            finderId: item['user_id'],
+                            message: message,
+                          ),
+                        ),
+                      );
+                    case 'claim_pending':
+                      return _buildDisabledButton(text: 'Claim Pending', icon: Icons.hourglass_top);
+                    case 'can_contact':
+                      return _buildActionButton(
+                        context: context,
+                        text: 'I Found This!',
+                        onPressed: () => _showDialog(
+                          context,
+                          ref,
+                          title: 'I Found This Item!',
+                          hint: 'e.g., "I think I found your wallet, contact me at..."',
+                          onSubmit: (message) => claimsController.submitContact(
+                            itemId: item['id'],
+                            ownerId: item['user_id'],
+                            message: message,
+                          ),
+                        ),
+                      );
+                    case 'contacted':
+                      return _buildDisabledButton(text: 'Owner Notified', icon: Icons.check_circle);
+                    default:
+                      return const SizedBox.shrink();
+                  }
+                },
+              ),
       ),
     );
   }

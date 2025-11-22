@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_lost_and_found/components/app_drawer.dart';
+import 'package:flutter_lost_and_found/components/primary_drawer.dart';
 
 class AdminHomePage extends StatelessWidget {
   const AdminHomePage({super.key});
@@ -15,7 +15,7 @@ class AdminHomePage extends StatelessWidget {
         title: const Text("Admin Dashboard"),
         centerTitle: true,
       ),
-      drawer: const AppDrawer(),
+      drawer: const PrimaryDrawer(),
       body: GridView.count(
         crossAxisCount: 2,
         padding: const EdgeInsets.all(16.0),

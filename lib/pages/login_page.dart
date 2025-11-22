@@ -12,18 +12,12 @@ class LoginPage extends StatelessWidget {
 
   void login(BuildContext context) async {
     try {
-      await _auth.signInWithEmailPassword(
-        _emailController.text,
-        _passwordController.text,
-      );
+      await _auth.signInWithEmailPassword(_emailController.text, _passwordController.text);
     } catch (e) {
       showDialog(
         // ignore: use_build_context_synchronously
         context: context,
-        builder: (context) => AlertDialog(
-          title: const Text("Login Failed"),
-          content: Text(e.toString()),
-        ),
+        builder: (context) => AlertDialog(title: const Text("Login Failed"), content: Text(e.toString())),
       );
     }
   }
@@ -52,19 +46,12 @@ class LoginPage extends StatelessWidget {
                   CircleAvatar(
                     radius: 120,
                     backgroundColor: Colors.transparent,
-                    child: Image(
-                      image: AssetImage('assets/images/logo-clear.png'),
-                    ),
+                    child: Image(image: AssetImage('assets/images/logo-clear.png')),
                   ),
 
                   const SizedBox(height: 50),
 
-                  PrimaryTextfield(
-                    label: "Email",
-                    hintText: "Email",
-                    obscureText: false,
-                    controller: _emailController,
-                  ),
+                  PrimaryTextfield(label: "Email", hintText: "Email", obscureText: false, controller: _emailController),
 
                   const SizedBox(height: 12),
 
@@ -84,6 +71,17 @@ class LoginPage extends StatelessWidget {
                     textColor: Colors.white,
                   ),
 
+                  const SizedBox(height: 10),
+
+                  PrimaryButton(
+                    text: "Continue as Guest",
+                    onTap: () {
+                      AuthService().signInAnonymously();
+                    },
+                    color: Colors.grey.shade700,
+                    textColor: Colors.white,
+                  ),
+
                   const SizedBox(height: 30),
 
                   Row(
@@ -91,20 +89,13 @@ class LoginPage extends StatelessWidget {
                     children: [
                       Text(
                         "Belum punya akun? ",
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Theme.of(context).colorScheme.inversePrimary,
-                        ),
+                        style: TextStyle(fontSize: 16, color: Theme.of(context).colorScheme.inversePrimary),
                       ),
                       GestureDetector(
                         onTap: onTap,
                         child: Text(
                           "Buat disini",
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.blue.shade400,
-                          ),
+                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.blue.shade400),
                         ),
                       ),
                     ],

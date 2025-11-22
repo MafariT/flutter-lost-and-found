@@ -5,15 +5,9 @@ class AuthService {
   final GoTrueClient _auth = supabase.auth;
 
   // Sign in
-  Future<AuthResponse> signInWithEmailPassword(
-    String email,
-    String password,
-  ) async {
+  Future<AuthResponse> signInWithEmailPassword(String email, String password) async {
     try {
-      final AuthResponse res = await _auth.signInWithPassword(
-        email: email,
-        password: password,
-      );
+      final AuthResponse res = await _auth.signInWithPassword(email: email, password: password);
       return res;
     } on AuthException catch (e) {
       throw Exception(e.message);
@@ -21,15 +15,18 @@ class AuthService {
   }
 
   // Sign up
-  Future<AuthResponse> signUpWithEmailPassword(
-    String email,
-    String password,
-  ) async {
+  Future<AuthResponse> signUpWithEmailPassword(String email, String password) async {
     try {
-      final AuthResponse res = await _auth.signUp(
-        email: email,
-        password: password,
-      );
+      final AuthResponse res = await _auth.signUp(email: email, password: password);
+      return res;
+    } on AuthException catch (e) {
+      throw Exception(e.message);
+    }
+  }
+
+  Future<AuthResponse> signInAnonymously() async {
+    try {
+      final AuthResponse res = await _auth.signInAnonymously();
       return res;
     } on AuthException catch (e) {
       throw Exception(e.message);

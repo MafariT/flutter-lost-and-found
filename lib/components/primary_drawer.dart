@@ -5,8 +5,8 @@ import 'package:flutter_lost_and_found/providers/user_provider.dart';
 import 'package:flutter_lost_and_found/services/auth/auth_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class AppDrawer extends ConsumerWidget {
-  const AppDrawer({super.key});
+class PrimaryDrawer extends ConsumerWidget {
+  const PrimaryDrawer({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

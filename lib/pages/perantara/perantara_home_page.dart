@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_lost_and_found/components/app_drawer.dart';
+import 'package:flutter_lost_and_found/components/primary_drawer.dart';
 import 'package:flutter_lost_and_found/pages/feeds/pending_claims_feed.dart';
 import 'package:flutter_lost_and_found/pages/feeds/pending_items_feed.dart';
 import 'package:flutter_lost_and_found/providers/perantara_provider.dart';
@@ -42,7 +42,7 @@ class _PerantaraHomePageState extends ConsumerState<PerantaraHomePage> {
 
     return Scaffold(
       appBar: AppBar(title: Text(_selectedIndex == 0 ? "Review New Items" : "Manage Claims"), centerTitle: true),
-      drawer: const AppDrawer(),
+      drawer: const PrimaryDrawer(),
       body: Center(child: _widgetOptions.elementAt(_selectedIndex)),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[

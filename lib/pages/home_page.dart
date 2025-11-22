@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_lost_and_found/components/app_drawer.dart';
+import 'package:flutter_lost_and_found/components/guest_drawer.dart';
+import 'package:flutter_lost_and_found/components/primary_drawer.dart';
 import 'package:flutter_lost_and_found/pages/add_item_page.dart';
 import 'package:flutter_lost_and_found/pages/feeds/items_feed.dart';
+import 'package:flutter_lost_and_found/providers/auth_provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class HomePage extends StatefulWidget {
+class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  ConsumerState<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends ConsumerState<HomePage> {
   int _selectedIndex = 0;
 
   static final List<Widget> _widgetOptions = <Widget>[
@@ -26,6 +29,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final isGuest = ref.watch(isGuestProvider);
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
 
@@ -37,20 +41,14 @@ class _HomePageState extends State<HomePage> {
         centerTitle: true,
       ),
 
-      drawer: const AppDrawer(),
+      drawer: isGuest ? GuestDrawer() : PrimaryDrawer(),
 
       body: Center(child: _widgetOptions.elementAt(_selectedIndex)),
 
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.search_off),
-            label: 'Lost Items',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.check_circle_outline),
-            label: 'Found Items',
-          ),
+          BottomNavigationBarItem(icon: Icon(Icons.search_off), label: 'Lost Items'),
+          BottomNavigationBarItem(icon: Icon(Icons.check_circle_outline), label: 'Found Items'),
         ],
         currentIndex: _selectedIndex,
         selectedItemColor: Theme.of(context).colorScheme.inversePrimary,
@@ -58,16 +56,15 @@ class _HomePageState extends State<HomePage> {
         onTap: _onItemTapped,
       ),
 
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const AddItemPage()),
-          );
-        },
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        child: Icon(Icons.add, color: Theme.of(context).colorScheme.surface),
-      ),
+      floatingActionButton: isGuest
+          ? null
+          : FloatingActionButton(
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const AddItemPage()));
+              },
+              backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+              child: Icon(Icons.add, color: Theme.of(context).colorScheme.surface),
+            ),
     );
   }
 }

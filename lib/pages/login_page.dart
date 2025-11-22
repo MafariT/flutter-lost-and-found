@@ -41,7 +41,7 @@ class _LoginPageState extends State<LoginPage> {
         showDialog(
           context: context,
           builder: (context) =>
-              AlertDialog(title: const Text("Login Failed"), content: Text(e.toString().replaceAll('Exception: ', ''))),
+              AlertDialog(title: const Text("Gagal Login"), content: Text(e.toString().replaceAll('Exception: ', ''))),
         );
         setState(() {
           _isLoading = false;

@@ -41,7 +41,7 @@ class _LoginPageState extends State<LoginPage> {
         showDialog(
           context: context,
           builder: (context) =>
-              AlertDialog(title: const Text("Login Gagal"), content: Text(e.toString().replaceAll('Exception: ', ''))),
+              AlertDialog(title: const Text("Masuk Gagal"), content: Text(e.toString().replaceAll('Exception: ', ''))),
         );
         setState(() {
           _isLoading = false;
@@ -80,18 +80,18 @@ class _LoginPageState extends State<LoginPage> {
                     const SizedBox(height: 50),
                     PrimaryTextfield(
                       label: "Email",
-                      hintText: "Email Terdaftar",
+                      hintText: "Masukkan email terdaftar",
                       obscureText: false,
                       controller: _emailController,
                       validator: (value) => value == null || value.isEmpty ? 'Masukkan Email' : null,
                     ),
                     const SizedBox(height: 12),
                     PrimaryTextfield(
-                      label: "Password",
-                      hintText: "Password Anda",
+                      label: "Kata Sandi",
+                      hintText: "Masukkan kata sandi anda",
                       obscureText: true,
                       controller: _passwordController,
-                      validator: (value) => value == null || value.isEmpty ? 'Masukkan Password' : null,
+                      validator: (value) => value == null || value.isEmpty ? 'Masukkan kata sandi' : null,
                     ),
                     const SizedBox(height: 30),
                     PrimaryButton(

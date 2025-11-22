@@ -11,7 +11,7 @@ class PrimaryDrawer extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final profileAsyncValue = ref.watch(userProvider);
+    final profileAsyncValue = ref.watch(userProfileProvider);
 
     return Drawer(
       backgroundColor: Theme.of(context).colorScheme.surface,

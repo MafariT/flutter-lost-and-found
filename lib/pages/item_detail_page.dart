@@ -115,7 +115,7 @@ class ItemDetailPage extends ConsumerWidget {
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(16.0),
         child: isGuest
-            ? const SizedBox.shrink()
+            ? _buildActionButton(context: context, text: 'Login/Register to interact', onPressed: () {})
             : buttonState.when(
                 loading: () => const Center(child: CircularProgressIndicator()),
                 error: (err, stack) => Center(child: Text('Error: $err')),

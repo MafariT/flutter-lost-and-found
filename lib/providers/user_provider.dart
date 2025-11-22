@@ -5,9 +5,9 @@ import 'package:flutter_lost_and_found/main.dart';
 import 'package:flutter_lost_and_found/providers/auth_provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-final userControllerProvider = AsyncNotifierProvider<UserController, void>(UserController.new);
+final userProfileControllerProvider = AsyncNotifierProvider<UserProfileController, void>(UserProfileController.new);
 
-class UserController extends AsyncNotifier<void> {
+class UserProfileController extends AsyncNotifier<void> {
   @override
   FutureOr<void> build() {}
 
@@ -57,7 +57,7 @@ class UserController extends AsyncNotifier<void> {
   }
 }
 
-final userProvider = FutureProvider<Map<String, dynamic>?>((ref) async {
+final userProfileProvider = FutureProvider<Map<String, dynamic>?>((ref) async {
   final authState = ref.watch(authStateProvider).value;
 
   if (authState?.session?.user == null) {

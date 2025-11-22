@@ -1,7 +1,7 @@
 import 'dart:io';
-import 'package:flutter_lost_and_found/components/primary_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_lost_and_found/components/primary_button.dart';
+import 'package:flutter_lost_and_found/components/primary_text_field.dart';
 import 'package:flutter_lost_and_found/providers/user_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
@@ -14,6 +14,8 @@ class ProfilePage extends ConsumerStatefulWidget {
 }
 
 class _ProfilePageState extends ConsumerState<ProfilePage> {
+  final _formKey = GlobalKey<FormState>();
+
   final _nameController = TextEditingController();
   final _nimController = TextEditingController();
   final _facultyController = TextEditingController();
@@ -41,9 +43,13 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
   }
 
   void _updateProfile() async {
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+
     try {
       await ref
-          .read(userControllerProvider.notifier)
+          .read(userProfileControllerProvider.notifier)
           .updateProfile(
             name: _nameController.text,
             nim: _nimController.text,
@@ -51,24 +57,28 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
             programStudy: _programStudyController.text,
             imageFile: _imageFile,
           );
-      if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text('Profile updated successfully!'), backgroundColor: Colors.green));
-      }
-      ref.invalidate(userProvider);
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e'), backgroundColor: Colors.red));
-      }
-    }
+    } catch (e) {}
   }
 
   @override
   Widget build(BuildContext context) {
-    final userProfile = ref.watch(userProvider);
-    final controllerState = ref.watch(userControllerProvider);
+    final userProfile = ref.watch(userProfileProvider);
+    final controllerState = ref.watch(userProfileControllerProvider);
     final isLoading = controllerState is AsyncLoading;
+
+    ref.listen<AsyncValue<void>>(userProfileControllerProvider, (previous, next) {
+      if (next is AsyncError) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error: ${next.error}'), backgroundColor: Colors.red));
+      }
+      if (previous is AsyncLoading && next is AsyncData) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Profile updated successfully!'), backgroundColor: Colors.green));
+        ref.invalidate(userProfileProvider);
+      }
+    });
 
     return Scaffold(
       appBar: AppBar(title: const Text('Edit Profile')),
@@ -85,69 +95,74 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
           }
           final avatarUrl = profile?['avatar_url'];
 
-          return ListView(
-            padding: const EdgeInsets.symmetric(vertical: 20),
-            children: [
-              Center(
-                child: Stack(
-                  children: [
-                    CircleAvatar(
-                      radius: 60,
-                      backgroundImage: _imageFile != null
-                          ? FileImage(_imageFile!)
-                          : (avatarUrl != null ? NetworkImage(avatarUrl) : null) as ImageProvider?,
-                      child: (avatarUrl == null && _imageFile == null) ? const Icon(Icons.person, size: 60) : null,
-                    ),
-                    Positioned(
-                      bottom: 0,
-                      right: 0,
-                      child: CircleAvatar(
-                        radius: 20,
-                        backgroundColor: Theme.of(context).colorScheme.secondary,
-                        child: IconButton(
-                          icon: const Icon(Icons.camera_alt, size: 22),
-                          onPressed: isLoading ? null : _pickImage,
+          return Form(
+            key: _formKey,
+            child: ListView(
+              padding: const EdgeInsets.symmetric(vertical: 20),
+              children: [
+                Center(
+                  child: Stack(
+                    children: [
+                      CircleAvatar(
+                        radius: 60,
+                        backgroundImage: _imageFile != null
+                            ? FileImage(_imageFile!)
+                            : (avatarUrl != null ? NetworkImage(avatarUrl) : null) as ImageProvider?,
+                        child: (avatarUrl == null && _imageFile == null) ? const Icon(Icons.person, size: 60) : null,
+                      ),
+                      Positioned(
+                        bottom: 0,
+                        right: 0,
+                        child: CircleAvatar(
+                          radius: 20,
+                          backgroundColor: Theme.of(context).colorScheme.secondary,
+                          child: IconButton(
+                            icon: const Icon(Icons.camera_alt, size: 22),
+                            onPressed: isLoading ? null : _pickImage,
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              const SizedBox(height: 30),
-              PrimaryTextfield(
-                label: "Name",
-                hintText: "Enter your name",
-                obscureText: false,
-                controller: _nameController,
-              ),
-              const SizedBox(height: 12),
-              PrimaryTextfield(
-                label: "NIM",
-                hintText: "Enter your NIM",
-                obscureText: false,
-                controller: _nimController,
-              ),
-              const SizedBox(height: 12),
-              PrimaryTextfield(
-                label: "Faculty",
-                hintText: "Enter your faculty",
-                obscureText: false,
-                controller: _facultyController,
-              ),
-              const SizedBox(height: 12),
-              PrimaryTextfield(
-                label: "Program Study",
-                hintText: "Enter your Program Study",
-                obscureText: false,
-                controller: _programStudyController,
-              ),
-              const SizedBox(height: 30),
-              PrimaryButton(
-                text: isLoading ? "Updating..." : "Update Profile",
-                color: Theme.of(context).colorScheme.inversePrimary,
-                onTap: _updateProfile,
-              ),
-            ],
+                const SizedBox(height: 30),
+                PrimaryTextfield(
+                  label: "Name",
+                  hintText: "Enter your name",
+                  obscureText: false,
+                  controller: _nameController,
+                  validator: (value) => value == null || value.isEmpty ? 'Name cannot be empty' : null,
+                ),
+                const SizedBox(height: 12),
+                PrimaryTextfield(
+                  label: "NIM",
+                  hintText: "Enter your NIM",
+                  obscureText: false,
+                  controller: _nimController,
+                  validator: (value) => value == null || value.isEmpty ? 'NIM cannot be empty' : null,
+                ),
+                const SizedBox(height: 12),
+                PrimaryTextfield(
+                  label: "Faculty",
+                  hintText: "Enter your faculty",
+                  obscureText: false,
+                  controller: _facultyController,
+                ),
+                const SizedBox(height: 12),
+                PrimaryTextfield(
+                  label: "Program Study",
+                  hintText: "Enter your Program Study",
+                  obscureText: false,
+                  controller: _programStudyController,
+                ),
+                const SizedBox(height: 30),
+                PrimaryButton(
+                  text: isLoading ? "Updating..." : "Update Profile",
+                  onTap: isLoading ? null : _updateProfile,
+                  color: Theme.of(context).colorScheme.inversePrimary,
+                ),
+              ],
+            ),
           );
         },
       ),

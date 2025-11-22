@@ -100,6 +100,7 @@ class _ItemList extends ConsumerWidget {
           child: const Text('Mark as Returned'),
         );
       case 'found':
+        return null;
       case 'unverified_found':
         return IconButton(
           icon: const Icon(Icons.delete_outline, color: Colors.red),

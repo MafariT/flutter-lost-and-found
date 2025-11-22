@@ -8,22 +8,26 @@ class PrimaryTextfield extends StatelessWidget {
     required this.label,
     required this.controller,
     this.readOnly = false,
+    this.validator,
     this.focusNode,
   });
   final String hintText;
   final bool obscureText;
   final String label;
-  final bool readOnly;
   final TextEditingController controller;
+  final bool readOnly;
+  final String? Function(String?)? validator; 
   final FocusNode? focusNode;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: TextField(
+      child: TextFormField(
         obscureText: obscureText,
         controller: controller,
+        readOnly: readOnly,
+        validator: validator,
         decoration: InputDecoration(
           enabledBorder: OutlineInputBorder(
             borderSide: BorderSide(
@@ -41,7 +45,6 @@ class PrimaryTextfield extends StatelessWidget {
           hintText: hintText,
           hintStyle: TextStyle(color: Theme.of(context).colorScheme.primary),
         ),
-        readOnly: readOnly,
       ),
     );
   }

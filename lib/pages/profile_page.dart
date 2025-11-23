@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_lost_and_found/components/primary_button.dart';
 import 'package:flutter_lost_and_found/components/primary_text_field.dart';
+import 'package:flutter_lost_and_found/main.dart';
 import 'package:flutter_lost_and_found/providers/user_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
@@ -42,7 +43,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
     }
   }
 
-  void _updateProfile() async {
+  void _updateProfile(bool isStudent) async {
     if (!_formKey.currentState!.validate()) {
       return;
     }
@@ -52,9 +53,9 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
           .read(userProfileControllerProvider.notifier)
           .updateProfile(
             name: _nameController.text,
-            nim: _nimController.text,
-            faculty: _facultyController.text,
-            programStudy: _programStudyController.text,
+            nim: isStudent ? _nimController.text : '',
+            faculty: isStudent ? _facultyController.text : '',
+            programStudy: isStudent ? _programStudyController.text : '',
             imageFile: _imageFile,
           );
     } catch (e) {}
@@ -65,6 +66,9 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
     final userProfile = ref.watch(userProfileProvider);
     final controllerState = ref.watch(userProfileControllerProvider);
     final isLoading = controllerState is AsyncLoading;
+
+    final userRole = supabase.auth.currentUser?.appMetadata['role'] ?? 'user';
+    final isStudent = userRole == 'user';
 
     ref.listen<AsyncValue<void>>(userProfileControllerProvider, (previous, next) {
       if (next is AsyncError) {
@@ -133,33 +137,37 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                   controller: _nameController,
                   validator: (value) => value == null || value.isEmpty ? 'Name cannot be empty' : null,
                 ),
-                const SizedBox(height: 12),
-                PrimaryTextfield(
-                  label: "NIM",
-                  hintText: "Enter your NIM",
-                  obscureText: false,
-                  controller: _nimController,
-                  validator: (value) => value == null || value.isEmpty ? 'NIM cannot be empty' : null,
-                ),
-                const SizedBox(height: 12),
-                PrimaryTextfield(
-                  label: "Faculty",
-                  hintText: "Enter your faculty",
-                  obscureText: false,
-                  controller: _facultyController,
-                ),
-                const SizedBox(height: 12),
-                PrimaryTextfield(
-                  label: "Program Study",
-                  hintText: "Enter your Program Study",
-                  obscureText: false,
-                  controller: _programStudyController,
-                ),
+
+                if (isStudent) ...[
+                  const SizedBox(height: 12),
+                  PrimaryTextfield(
+                    label: "NIM",
+                    hintText: "Enter your NIM",
+                    obscureText: false,
+                    controller: _nimController,
+                    validator: (value) => value == null || value.isEmpty ? 'NIM cannot be empty' : null,
+                  ),
+                  const SizedBox(height: 12),
+                  PrimaryTextfield(
+                    label: "Faculty",
+                    hintText: "Enter your faculty",
+                    obscureText: false,
+                    controller: _facultyController,
+                  ),
+                  const SizedBox(height: 12),
+                  PrimaryTextfield(
+                    label: "Program Study",
+                    hintText: "Enter your Program Study",
+                    obscureText: false,
+                    controller: _programStudyController,
+                  ),
+                ],
+
                 const SizedBox(height: 30),
                 PrimaryButton(
                   text: isLoading ? "Updating..." : "Update Profile",
-                  onTap: isLoading ? null : _updateProfile,
                   color: Theme.of(context).colorScheme.inversePrimary,
+                  onTap: isLoading ? null : () => _updateProfile(isStudent),
                 ),
               ],
             ),

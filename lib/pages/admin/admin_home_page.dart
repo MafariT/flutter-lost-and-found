@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_lost_and_found/components/primary_drawer.dart';
+import 'package:flutter_lost_and_found/pages/admin/admin_item_list_page.dart';
 import 'package:flutter_lost_and_found/pages/admin/admin_user_list_page.dart';
 
 class AdminHomePage extends StatelessWidget {
@@ -36,7 +37,7 @@ class AdminHomePage extends StatelessWidget {
             icon: Icons.inventory_2_outlined,
             label: 'Manage Items',
             onTap: () {
-              /* TODO: Navigate to item management page */
+              Navigator.push(context, MaterialPageRoute(builder: (context) => const AdminItemListPage()));
             },
           ),
           _buildDashboardCard(

@@ -48,11 +48,18 @@ final claimStatusProvider = FutureProvider.family<String, String>((ref, itemId) 
   if (itemStatus == 'found') {
     final claims = await supabase
         .from('claims')
-        .select('id')
+        .select('status')
         .eq('item_id', itemId)
         .eq('claimer_id', currentUser.id)
         .limit(1);
-    return claims.isEmpty ? 'can_claim' : 'claim_pending';
+
+    if (claims.isNotEmpty) {
+      if (claims.first['status'] == 'pending') {
+        return 'claim_pending';
+      }
+    }
+
+    return 'can_claim';
   } else if (itemStatus == 'lost') {
     final contacts = await supabase
         .from('contacts')

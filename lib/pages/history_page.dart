@@ -27,11 +27,11 @@ class HistoryPage extends ConsumerWidget {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('My History'),
+          title: const Text('Riwayat'),
           bottom: const TabBar(
             tabs: [
-              Tab(text: 'My Lost Items'),
-              Tab(text: 'My Found Items'),
+              Tab(text: 'Barang hilang'),
+              Tab(text: 'Barang temuan'),
             ],
           ),
         ),

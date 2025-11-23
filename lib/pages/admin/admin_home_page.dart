@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_lost_and_found/components/primary_drawer.dart';
+import 'package:flutter_lost_and_found/pages/admin/admin_user_list_page.dart';
 
 class AdminHomePage extends StatelessWidget {
   const AdminHomePage({super.key});
@@ -27,7 +28,7 @@ class AdminHomePage extends StatelessWidget {
             icon: Icons.people_outline,
             label: 'Manage Users',
             onTap: () {
-              /* TODO: Navigate to user management page */
+              Navigator.push(context, MaterialPageRoute(builder: (context) => const AdminUserListPage()));
             },
           ),
           _buildDashboardCard(

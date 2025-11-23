@@ -41,7 +41,7 @@ class _LoginPageState extends State<LoginPage> {
         showDialog(
           context: context,
           builder: (context) =>
-              AlertDialog(title: const Text("Masuk Gagal"), content: Text(e.toString().replaceAll('Exception: ', ''))),
+              AlertDialog(title: const Text("Login Gagal"), content: Text(e.toString().replaceAll('Exception: ', ''))),
         );
         setState(() {
           _isLoading = false;
@@ -95,14 +95,14 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     const SizedBox(height: 30),
                     PrimaryButton(
-                      text: _isLoading ? "Memuat Halaman..." : "Masuk",
+                      text: _isLoading ? "Memuat Halaman..." : "Login",
                       onTap: _isLoading ? null : login,
                       color: Colors.blue.shade400,
                       textColor: Colors.white,
                     ),
                     const SizedBox(height: 10),
                     PrimaryButton(
-                      text: "Masuk Sebagai Tamu",
+                      text: "Login Sebagai Tamu",
                       onTap: _isLoading ? null : () => _auth.signInAnonymously(),
                       color: Colors.grey.shade700,
                       textColor: Colors.white,

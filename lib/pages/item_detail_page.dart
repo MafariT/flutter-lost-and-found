@@ -23,7 +23,7 @@ class ItemDetailPage extends ConsumerWidget {
         title: Text(title),
         content: TextFormField(
           controller: messageController,
-          decoration: InputDecoration(labelText: 'Your Message', hintText: hint),
+          decoration: InputDecoration(labelText: 'Pesan claim', hintText: hint),
           maxLines: 3,
           autofocus: true,
         ),
@@ -59,18 +59,18 @@ class ItemDetailPage extends ConsumerWidget {
       if (previous is AsyncLoading && next is AsyncData) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(const SnackBar(content: Text('Action successful!'), backgroundColor: Colors.green));
+        ).showSnackBar(const SnackBar(content: Text('Submit berhasil!'), backgroundColor: Colors.green));
         ref.invalidate(claimStatusProvider(item['id'] as String));
       }
     });
 
     final String itemName = item['item_name'] ?? 'No Name';
-    final String description = item['description'] ?? 'No description available.';
+    final String description = item['description'] ?? 'Tidak terdeskripsi';
     final String? imageUrl = item['image_url'];
-    final String location = item['location'] ?? 'Location not specified';
+    final String location = item['location'] ?? 'Lokasi tidak spesifik';
     final String createdAt = item['created_at'] ?? '';
 
-    String formattedDate = 'Date not available';
+    String formattedDate = 'Waktu tidak diketahui';
     if (createdAt.isNotEmpty) {
       initializeDateFormatting('id', null);
       final parsedDate = DateTime.parse(createdAt).toUtc().add(const Duration(hours: 7)); // UTC+7
@@ -102,9 +102,9 @@ class ItemDetailPage extends ConsumerWidget {
                   const SizedBox(height: 8),
                   Text(description, style: const TextStyle(fontSize: 16, height: 1.5)),
                   const Divider(height: 40),
-                  _buildDetailRow(context, Icons.location_on_outlined, 'Location', location),
+                  _buildDetailRow(context, Icons.location_on_outlined, 'Lokasi', location),
                   const SizedBox(height: 16),
-                  _buildDetailRow(context, Icons.calendar_today_outlined, 'Date Reported', formattedDate),
+                  _buildDetailRow(context, Icons.calendar_today_outlined, 'Tanggal dilaporkan', formattedDate),
                   const SizedBox(height: 40),
                 ],
               ),
@@ -124,12 +124,12 @@ class ItemDetailPage extends ConsumerWidget {
                     case 'can_claim':
                       return _buildActionButton(
                         context: context,
-                        text: 'Claim Item',
+                        text: 'Claim Barang',
                         onPressed: () => _showDialog(
                           context,
                           ref,
-                          title: 'Claim This Item',
-                          hint: 'e.g., "My wallet has a red sticker inside."',
+                          title: 'Claim barang ini',
+                          hint: 'Misalnya: "Izin Claim pak saya kehilangan dompet merah di FST gedung B"',
                           onSubmit: (message) => claimsController.submitClaim(
                             itemId: item['id'],
                             finderId: item['user_id'],
@@ -142,12 +142,12 @@ class ItemDetailPage extends ConsumerWidget {
                     case 'can_contact':
                       return _buildActionButton(
                         context: context,
-                        text: 'I Found This!',
+                        text: 'Laporkan Temuan!',
                         onPressed: () => _showDialog(
                           context,
                           ref,
-                          title: 'I Found This Item!',
-                          hint: 'e.g., "I think I found your wallet, contact me at..."',
+                          title: 'Saya temukan barang ini!',
+                          hint: 'Misalnya: "Aku dapat ini di depan parkiran, PC Wa aku  08234....."',
                           onSubmit: (message) => claimsController.submitContact(
                             itemId: item['id'],
                             ownerId: item['user_id'],
@@ -156,7 +156,9 @@ class ItemDetailPage extends ConsumerWidget {
                         ),
                       );
                     case 'contacted':
-                      return _buildDisabledButton(text: 'Owner Notified', icon: Icons.check_circle);
+                      return _buildDisabledButton(text: 'Pemilik telah diberitahu', icon: Icons.check_circle);
+                    case 'rejected':
+                      return _buildDisabledButton(text: 'Claim anda ditolak', icon: Icons.cancel_outlined);
                     default:
                       return const SizedBox.shrink();
                   }

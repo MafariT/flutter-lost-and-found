@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_lost_and_found/pages/history_page.dart';
-import 'package:flutter_lost_and_found/pages/profile_page.dart';
 import 'package:flutter_lost_and_found/pages/settings_page.dart';
 import 'package:flutter_lost_and_found/providers/user_provider.dart';
 import 'package:flutter_lost_and_found/services/auth/auth_service.dart';
@@ -64,14 +63,6 @@ class PrimaryDrawer extends ConsumerWidget {
             child: ListView(
               padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
               children: <Widget>[
-                _DrawerTile(
-                  icon: Icons.person_outline_rounded,
-                  title: 'Profil',
-                  onTap: () {
-                    Navigator.pop(context);
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => const ProfilePage()));
-                  },
-                ),
                 _DrawerTile(
                   icon: Icons.history_rounded,
                   title: 'Riwayat',

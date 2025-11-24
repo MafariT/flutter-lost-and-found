@@ -21,3 +21,14 @@ final itemsFeedProvider = FutureProvider.family<List<Map<String, dynamic>>, Stri
   final data = await query.order('created_at', ascending: false);
   return data;
 });
+
+final overviewItemsProvider = FutureProvider<List<Map<String, dynamic>>>((ref) async {
+  final data = await supabase
+      .from('items')
+      .select()
+      .inFilter('status', ['lost', 'found'])
+      .order('created_at', ascending: false)
+      .limit(20);
+
+  return data;
+});

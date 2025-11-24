@@ -26,13 +26,9 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void login() async {
-    if (!_formKey.currentState!.validate()) {
-      return;
-    }
+    if (!_formKey.currentState!.validate()) return;
 
-    setState(() {
-      _isLoading = true;
-    });
+    setState(() => _isLoading = true);
 
     try {
       await _auth.signInWithEmailPassword(_emailController.text, _passwordController.text);
@@ -43,9 +39,7 @@ class _LoginPageState extends State<LoginPage> {
           builder: (context) =>
               AlertDialog(title: const Text("Login Gagal"), content: Text(e.toString().replaceAll('Exception: ', ''))),
         );
-        setState(() {
-          _isLoading = false;
-        });
+        setState(() => _isLoading = false);
       }
     }
   }
@@ -53,7 +47,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.tertiary,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: Stack(
         children: [
           Container(
@@ -61,7 +55,7 @@ class _LoginPageState extends State<LoginPage> {
               image: DecorationImage(
                 image: AssetImage('assets/images/splash-background.png'),
                 fit: BoxFit.cover,
-                opacity: 0.5,
+                opacity: 0.4,
               ),
             ),
           ),
@@ -73,11 +67,16 @@ class _LoginPageState extends State<LoginPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     CircleAvatar(
-                      radius: 120,
+                      radius: 140,
                       backgroundColor: Colors.transparent,
-                      child: Image(image: AssetImage('assets/images/logo-clear.png')),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Image.asset('assets/images/logo-clear.png'),
+                      ),
                     ),
-                    const SizedBox(height: 50),
+
+                    const SizedBox(height: 20),
+
                     PrimaryTextfield(
                       label: "Email",
                       hintText: "Masukkan email terdaftar",
@@ -85,7 +84,6 @@ class _LoginPageState extends State<LoginPage> {
                       controller: _emailController,
                       validator: (value) => value == null || value.isEmpty ? 'Masukkan Email' : null,
                     ),
-                    const SizedBox(height: 12),
                     PrimaryTextfield(
                       label: "Kata Sandi",
                       hintText: "Masukkan kata sandi anda",
@@ -93,33 +91,40 @@ class _LoginPageState extends State<LoginPage> {
                       controller: _passwordController,
                       validator: (value) => value == null || value.isEmpty ? 'Masukkan kata sandi' : null,
                     ),
-                    const SizedBox(height: 30),
+
+                    const SizedBox(height: 20),
+
                     PrimaryButton(
                       text: _isLoading ? "Memuat Halaman..." : "Login",
                       onTap: _isLoading ? null : login,
-                      color: Colors.blue.shade400,
+                      color: Theme.of(context).colorScheme.primary,
                       textColor: Colors.white,
                     ),
-                    const SizedBox(height: 10),
+
+                    const SizedBox(height: 16),
+
                     PrimaryButton(
                       text: "Login Sebagai Tamu",
                       onTap: _isLoading ? null : () => _auth.signInAnonymously(),
-                      color: Colors.grey.shade700,
-                      textColor: Colors.white,
+                      color: Colors.grey.shade200,
+                      textColor: Colors.black87,
                     ),
-                    const SizedBox(height: 30),
+
+                    const SizedBox(height: 20),
+
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
-                          "Belum punya akun? ",
-                          style: TextStyle(fontSize: 16, color: Theme.of(context).colorScheme.inversePrimary),
-                        ),
+                        Text("Belum punya akun? ", style: TextStyle(fontSize: 14, color: Colors.grey.shade600)),
                         GestureDetector(
                           onTap: widget.onTap,
                           child: Text(
-                            "Buat disini",
-                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.blue.shade400),
+                            "Daftar disini",
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
                           ),
                         ),
                       ],

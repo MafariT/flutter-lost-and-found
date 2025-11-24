@@ -28,13 +28,9 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   void register() async {
-    if (!_formKey.currentState!.validate()) {
-      return;
-    }
+    if (!_formKey.currentState!.validate()) return;
 
-    setState(() {
-      _isLoading = true;
-    });
+    setState(() => _isLoading = true);
 
     try {
       await _auth.signUpWithEmailPassword(_emailController.text, _passwordController.text);
@@ -47,9 +43,7 @@ class _RegisterPageState extends State<RegisterPage> {
             content: Text(e.toString().replaceAll('Exception: ', '')),
           ),
         );
-        setState(() {
-          _isLoading = false;
-        });
+        setState(() => _isLoading = false);
       }
     }
   }
@@ -57,7 +51,7 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.tertiary,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: Stack(
         children: [
           Container(
@@ -65,7 +59,7 @@ class _RegisterPageState extends State<RegisterPage> {
               image: DecorationImage(
                 image: AssetImage('assets/images/splash-background.png'),
                 fit: BoxFit.cover,
-                opacity: 0.5,
+                opacity: 0.4,
               ),
             ),
           ),
@@ -77,11 +71,16 @@ class _RegisterPageState extends State<RegisterPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     CircleAvatar(
-                      radius: 120,
+                      radius: 140,
                       backgroundColor: Colors.transparent,
-                      child: Image(image: AssetImage('assets/images/logo-clear.png')),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Image.asset('assets/images/logo-clear.png'),
+                      ),
                     ),
-                    const SizedBox(height: 50),
+
+                    const SizedBox(height: 20),
+
                     PrimaryTextfield(
                       label: "Email",
                       hintText: "Masukkan Email anda",
@@ -89,7 +88,6 @@ class _RegisterPageState extends State<RegisterPage> {
                       controller: _emailController,
                       validator: (value) => value == null || value.isEmpty ? 'Masukkan Email' : null,
                     ),
-                    const SizedBox(height: 12),
                     PrimaryTextfield(
                       label: "Kata Sandi",
                       hintText: "Buat kata sandi",
@@ -97,42 +95,40 @@ class _RegisterPageState extends State<RegisterPage> {
                       controller: _passwordController,
                       validator: (value) {
                         if (value == null || value.isEmpty) return 'Masukkan kata sandi';
-                        if (value.length < 6) return 'Kata sandi harus mengandung minimal 6 karakter';
+                        if (value.length < 6) return 'Minimal 6 karakter';
                         return null;
                       },
                     ),
-                    const SizedBox(height: 12),
                     PrimaryTextfield(
                       label: "Konfirmasi Kata Sandi",
-                      hintText: "konfirmasi kata sandi anda",
+                      hintText: "Konfirmasi kata sandi anda",
                       obscureText: true,
                       controller: _confirmPasswordController,
                       validator: (value) {
                         if (value == null || value.isEmpty) return 'Konfirmasi kata sandi';
-                        if (value != _passwordController.text) return "Kata sandi salah atau tidak valid";
+                        if (value != _passwordController.text) return "Kata sandi tidak cocok";
                         return null;
                       },
                     ),
-                    const SizedBox(height: 30),
+
+                    const SizedBox(height: 20),
+
                     PrimaryButton(
                       text: _isLoading ? "Membuat Akun..." : "Daftar",
                       onTap: _isLoading ? null : register,
-                      color: Colors.blue.shade400,
+                      color: Theme.of(context).colorScheme.primary,
                       textColor: Colors.white,
                     ),
                     const SizedBox(height: 30),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
-                          "Sudah punya akun? ",
-                          style: TextStyle(fontSize: 16, color: Theme.of(context).colorScheme.inversePrimary),
-                        ),
+                        Text("Sudah punya akun? ", style: TextStyle(fontSize: 14, color: Colors.grey.shade600)),
                         GestureDetector(
                           onTap: widget.onTap,
                           child: Text(
                             "Masuk disini",
-                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.blue.shade400),
+                            style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.primary),
                           ),
                         ),
                       ],

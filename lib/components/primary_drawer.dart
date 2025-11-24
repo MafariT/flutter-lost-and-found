@@ -60,7 +60,7 @@ class PrimaryDrawer extends ConsumerWidget {
           ),
           ListTile(
             leading: const Icon(Icons.person_outline),
-            title: const Text('Profile'),
+            title: const Text('Profil'),
             onTap: () {
               Navigator.pop(context);
               Navigator.push(context, MaterialPageRoute(builder: (context) => const ProfilePage()));
@@ -68,7 +68,7 @@ class PrimaryDrawer extends ConsumerWidget {
           ),
           ListTile(
             leading: const Icon(Icons.history),
-            title: const Text('My History'),
+            title: const Text('Riwayat'),
             onTap: () {
               Navigator.pop(context);
               Navigator.push(context, MaterialPageRoute(builder: (context) => const HistoryPage()));
@@ -76,7 +76,7 @@ class PrimaryDrawer extends ConsumerWidget {
           ),
           ListTile(
             leading: const Icon(Icons.settings_outlined),
-            title: const Text('Settings'),
+            title: const Text('Pengaturan'),
             onTap: () {
               Navigator.pop(context);
               Navigator.push(context, MaterialPageRoute(builder: (context) => const SettingsPage()));

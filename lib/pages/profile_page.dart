@@ -79,13 +79,13 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
       if (previous is AsyncLoading && next is AsyncData) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(const SnackBar(content: Text('Profile updated successfully!'), backgroundColor: Colors.green));
+        ).showSnackBar(const SnackBar(content: Text('Pembaruan Profil Berhasil!'), backgroundColor: Colors.green));
         ref.invalidate(userProfileProvider);
       }
     });
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Edit Profile')),
+      appBar: AppBar(title: const Text('Edit Profil')),
       body: userProfile.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (err, stack) => Center(child: Text('Error: $err')),
@@ -131,33 +131,33 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                 ),
                 const SizedBox(height: 30),
                 PrimaryTextfield(
-                  label: "Name",
-                  hintText: "Enter your name",
+                  label: "Nama",
+                  hintText: "Masukkan nama anda",
                   obscureText: false,
                   controller: _nameController,
-                  validator: (value) => value == null || value.isEmpty ? 'Name cannot be empty' : null,
+                  validator: (value) => value == null || value.isEmpty ? 'Nama tidak boleh kosong' : null,
                 ),
 
                 if (isStudent) ...[
                   const SizedBox(height: 12),
                   PrimaryTextfield(
                     label: "NIM",
-                    hintText: "Enter your NIM",
+                    hintText: "Masukan NIM anda",
                     obscureText: false,
                     controller: _nimController,
-                    validator: (value) => value == null || value.isEmpty ? 'NIM cannot be empty' : null,
+                    validator: (value) => value == null || value.isEmpty ? 'NIM tidak boleh kosong' : null,
                   ),
                   const SizedBox(height: 12),
                   PrimaryTextfield(
-                    label: "Faculty",
-                    hintText: "Enter your faculty",
+                    label: "Fakultas",
+                    hintText: "Masukkan fakultas anda",
                     obscureText: false,
                     controller: _facultyController,
                   ),
                   const SizedBox(height: 12),
                   PrimaryTextfield(
-                    label: "Program Study",
-                    hintText: "Enter your Program Study",
+                    label: "Program Studi",
+                    hintText: "Masukkan program studi anda",
                     obscureText: false,
                     controller: _programStudyController,
                   ),
@@ -165,8 +165,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
 
                 const SizedBox(height: 30),
                 PrimaryButton(
-                  text: isLoading ? "Updating..." : "Update Profile",
-                  color: Theme.of(context).colorScheme.inversePrimary,
+                  text: isLoading ? "Memperbarui..." : "Perbarui Profil",
                   onTap: isLoading ? null : () => _updateProfile(isStudent),
                 ),
               ],

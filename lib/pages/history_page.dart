@@ -16,7 +16,7 @@ class HistoryPage extends ConsumerWidget {
       if (previous is AsyncLoading && next is AsyncData) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(const SnackBar(content: Text('Action successful!'), backgroundColor: Colors.green));
+        ).showSnackBar(const SnackBar(content: Text('Berhasil!'), backgroundColor: Colors.green));
         ref.invalidate(myItemsProvider);
       }
     });
@@ -27,11 +27,11 @@ class HistoryPage extends ConsumerWidget {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('My History'),
+          title: const Text('Riwayat'),
           bottom: const TabBar(
             tabs: [
-              Tab(text: 'My Lost Items'),
-              Tab(text: 'My Found Items'),
+              Tab(text: 'Kehilangan'),
+              Tab(text: 'Temuan'),
             ],
           ),
         ),
@@ -66,7 +66,7 @@ class _ItemList extends ConsumerWidget {
     if (items.isEmpty) {
       return RefreshIndicator(
         onRefresh: () => ref.refresh(myItemsProvider.future),
-        child: const Center(child: Text('You have not reported any items in this category.')),
+        child: const Center(child: Text('Anda belum melaporkan temuan')),
       );
     }
     return RefreshIndicator(
@@ -97,7 +97,7 @@ class _ItemList extends ConsumerWidget {
       case 'lost':
         return ElevatedButton(
           onPressed: () => ref.read(historyControllerProvider.notifier).markItemAsReturned(itemId),
-          child: const Text('Mark as Returned'),
+          child: const Text('Sudah Ditemukan'),
         );
       case 'found':
         return null;
@@ -125,7 +125,7 @@ class _ItemList extends ConsumerWidget {
             final isLostItem = item['status'] == 'lost';
 
             return AlertDialog(
-              title: Text(isLostItem ? 'Contacts for your Item' : 'Claims on your Item'),
+              title: Text(isLostItem ? 'Kontak tentang barang anda' : 'Info barang temuan anda'),
               content: SizedBox(
                 width: double.maxFinite,
                 child: activity.when(
@@ -133,7 +133,7 @@ class _ItemList extends ConsumerWidget {
                   error: (err, stack) => Text('Error: $err'),
                   data: (activities) {
                     if (activities.isEmpty) {
-                      return const Center(child: Text('No activity yet.'));
+                      return const Center(child: Text('Belum ada aktifitas'));
                     }
                     return ListView.builder(
                       shrinkWrap: true,

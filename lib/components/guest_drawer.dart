@@ -24,7 +24,7 @@ class GuestDrawer extends StatelessWidget {
                 ),
                 const SizedBox(height: 10),
                 Text(
-                  'Welcome, Guest!',
+                  'Selamat datang!',
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.inversePrimary,
                     fontSize: 16,
@@ -36,8 +36,8 @@ class GuestDrawer extends StatelessWidget {
           ),
           ListTile(
             leading: const Icon(Icons.login),
-            title: const Text('Login or Register'),
-            subtitle: const Text('Create an account to report and claim items'),
+            title: const Text('Login atau Daftar'),
+            subtitle: const Text('Buat akun untuk lapor dan claim barang'),
             onTap: () {
               AuthService().signOut();
             },

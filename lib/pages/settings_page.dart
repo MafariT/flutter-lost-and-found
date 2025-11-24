@@ -10,36 +10,36 @@ class SettingsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Settings'),
+        title: const Text('Pengaturan'),
         elevation: 0,
         backgroundColor: Theme.of(context).colorScheme.surface,
       ),
       backgroundColor: Theme.of(context).colorScheme.surface,
       body: ListView(
         children: [
-          const _SettingsHeader(title: 'Account'),
+          const _SettingsHeader(title: 'Akun'),
           _SettingsTile(
             icon: Icons.person_outline,
-            title: 'Edit Profile',
-            subtitle: 'Update your name, faculty, and avatar',
+            title: 'Edit Profil',
+            subtitle: 'Perbarui nama, fakultas, dan avatar',
             onTap: () {
               Navigator.push(context, MaterialPageRoute(builder: (context) => const ProfilePage()));
             },
           ),
           _SettingsTile(
             icon: Icons.lock_outline,
-            title: 'Change Password',
-            subtitle: 'Update your login password',
+            title: 'Ubah Kata Sandi',
+            subtitle: 'Perbarui atau ubah kata sandi anda',
             onTap: () {
               ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Feature coming soon!')));
             },
           ),
 
-          const _SettingsHeader(title: 'App Settings'),
+          const _SettingsHeader(title: 'Aplikasi'),
           _SettingsTile(
             icon: Icons.notifications_outlined,
-            title: 'Notifications',
-            subtitle: 'Manage push notification preferences',
+            title: 'Pemberitahuan',
+            subtitle: 'Kelola preferensi pemberitahuan',
             onTap: () {
               ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Feature coming soon!')));
             },
@@ -47,28 +47,19 @@ class SettingsPage extends StatelessWidget {
 
           const _ThemeToggleTile(),
 
-          _SettingsTile(
-            icon: Icons.language_outlined,
-            title: 'Language',
-            subtitle: 'Select your preferred language',
-            onTap: () {
-              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Feature coming soon!')));
-            },
-          ),
-
-          const _SettingsHeader(title: 'About'),
+          const _SettingsHeader(title: 'Tentang'),
           _SettingsTile(
             icon: Icons.policy_outlined,
-            title: 'Privacy Policy',
-            subtitle: 'Read our data handling policies',
+            title: 'Kebijakan Privasi',
+            subtitle: 'lihat cara kami mengelola data',
             onTap: () {
               ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Feature coming soon!')));
             },
           ),
           _SettingsTile(
             icon: Icons.help_outline,
-            title: 'Help & Support',
-            subtitle: 'Get help or report an issue',
+            title: 'Dukungan dan Bantuan',
+            subtitle: 'Dapatkan dukungan atau laporkan masalah',
             onTap: () {
               ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Feature coming soon!')));
             },
@@ -88,9 +79,9 @@ class _ThemeToggleTile extends StatelessWidget {
       builder: (context, themeProvider, child) {
         return ListTile(
           leading: const Icon(Icons.color_lens_outlined),
-          title: const Text('Dark Mode'),
+          title: const Text('Mode Gelap'),
           subtitle: Text(
-            themeProvider.isDarkMode ? 'Enabled' : 'Disabled',
+            themeProvider.isDarkMode ? 'Aktif' : 'Nonaktif',
             style: Theme.of(context).textTheme.bodySmall,
           ),
           trailing: Switch(

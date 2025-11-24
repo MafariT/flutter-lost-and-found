@@ -41,7 +41,7 @@ class _LoginPageState extends State<LoginPage> {
         showDialog(
           context: context,
           builder: (context) =>
-              AlertDialog(title: const Text("Login Failed"), content: Text(e.toString().replaceAll('Exception: ', ''))),
+              AlertDialog(title: const Text("Login Gagal"), content: Text(e.toString().replaceAll('Exception: ', ''))),
         );
         setState(() {
           _isLoading = false;
@@ -80,29 +80,29 @@ class _LoginPageState extends State<LoginPage> {
                     const SizedBox(height: 50),
                     PrimaryTextfield(
                       label: "Email",
-                      hintText: "Email",
+                      hintText: "Masukkan email terdaftar",
                       obscureText: false,
                       controller: _emailController,
-                      validator: (value) => value == null || value.isEmpty ? 'Please enter your email' : null,
+                      validator: (value) => value == null || value.isEmpty ? 'Masukkan Email' : null,
                     ),
                     const SizedBox(height: 12),
                     PrimaryTextfield(
-                      label: "Password",
-                      hintText: "Password",
+                      label: "Kata Sandi",
+                      hintText: "Masukkan kata sandi anda",
                       obscureText: true,
                       controller: _passwordController,
-                      validator: (value) => value == null || value.isEmpty ? 'Please enter your password' : null,
+                      validator: (value) => value == null || value.isEmpty ? 'Masukkan kata sandi' : null,
                     ),
                     const SizedBox(height: 30),
                     PrimaryButton(
-                      text: _isLoading ? "LOGGING IN..." : "LOGIN",
+                      text: _isLoading ? "Memuat Halaman..." : "Login",
                       onTap: _isLoading ? null : login,
                       color: Colors.blue.shade400,
                       textColor: Colors.white,
                     ),
                     const SizedBox(height: 10),
                     PrimaryButton(
-                      text: "Continue as Guest",
+                      text: "Login Sebagai Tamu",
                       onTap: _isLoading ? null : () => _auth.signInAnonymously(),
                       color: Colors.grey.shade700,
                       textColor: Colors.white,

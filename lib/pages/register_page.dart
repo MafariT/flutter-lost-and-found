@@ -43,7 +43,7 @@ class _RegisterPageState extends State<RegisterPage> {
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
-            title: const Text("Registration Failed"),
+            title: const Text("Pendaftaran Gagal"),
             content: Text(e.toString().replaceAll('Exception: ', '')),
           ),
         );
@@ -84,38 +84,38 @@ class _RegisterPageState extends State<RegisterPage> {
                     const SizedBox(height: 50),
                     PrimaryTextfield(
                       label: "Email",
-                      hintText: "Email",
+                      hintText: "Masukkan Email anda",
                       obscureText: false,
                       controller: _emailController,
-                      validator: (value) => value == null || value.isEmpty ? 'Please enter an email' : null,
+                      validator: (value) => value == null || value.isEmpty ? 'Masukkan Email' : null,
                     ),
                     const SizedBox(height: 12),
                     PrimaryTextfield(
-                      label: "Password",
-                      hintText: "Password",
+                      label: "Kata Sandi",
+                      hintText: "Buat kata sandi",
                       obscureText: true,
                       controller: _passwordController,
                       validator: (value) {
-                        if (value == null || value.isEmpty) return 'Please enter a password';
-                        if (value.length < 6) return 'Password must be at least 6 characters';
+                        if (value == null || value.isEmpty) return 'Masukkan kata sandi';
+                        if (value.length < 6) return 'Kata sandi harus mengandung minimal 6 karakter';
                         return null;
                       },
                     ),
                     const SizedBox(height: 12),
                     PrimaryTextfield(
-                      label: "Confirm Password",
-                      hintText: "Confirm Password",
+                      label: "Konfirmasi Kata Sandi",
+                      hintText: "konfirmasi kata sandi anda",
                       obscureText: true,
                       controller: _confirmPasswordController,
                       validator: (value) {
-                        if (value == null || value.isEmpty) return 'Please confirm your password';
-                        if (value != _passwordController.text) return "Passwords don't match";
+                        if (value == null || value.isEmpty) return 'Konfirmasi kata sandi';
+                        if (value != _passwordController.text) return "Kata sandi salah atau tidak valid";
                         return null;
                       },
                     ),
                     const SizedBox(height: 30),
                     PrimaryButton(
-                      text: _isLoading ? "CREATING ACCOUNT..." : "REGISTER",
+                      text: _isLoading ? "Membuat Akun..." : "Daftar",
                       onTap: _isLoading ? null : register,
                       color: Colors.blue.shade400,
                       textColor: Colors.white,

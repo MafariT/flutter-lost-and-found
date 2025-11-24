@@ -20,7 +20,7 @@ class ItemsFeed extends ConsumerWidget {
               ref.read(searchQueryProvider.notifier).updateQuery(query);
             },
             decoration: InputDecoration(
-              hintText: 'Search for an item...',
+              hintText: 'Cari barang ...',
               prefixIcon: const Icon(Icons.search),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(20),
@@ -48,7 +48,7 @@ class ItemsFeed extends ConsumerWidget {
                       Center(
                         child: Padding(
                           padding: EdgeInsets.all(48.0),
-                          child: Text('No items found.'),
+                          child: Text('Barang tidak ditemukan.'),
                         ),
                       )
                     ],

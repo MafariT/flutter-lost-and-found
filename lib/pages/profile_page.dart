@@ -72,20 +72,27 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
 
     ref.listen<AsyncValue<void>>(userProfileControllerProvider, (previous, next) {
       if (next is AsyncError) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Error: ${next.error}'), backgroundColor: Colors.red));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: ${next.error}'), backgroundColor: Theme.of(context).colorScheme.error),
+        );
       }
       if (previous is AsyncLoading && next is AsyncData) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text('Pembaruan Profil Berhasil!'), backgroundColor: Colors.green));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: const Text('Pembaruan Profil Berhasil!'), backgroundColor: Colors.green.shade600),
+        );
         ref.invalidate(userProfileProvider);
       }
     });
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Edit Profil')),
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        title: const Text('Edit Profil', style: TextStyle(fontWeight: FontWeight.bold)),
+        centerTitle: true,
+        backgroundColor: Colors.white,
+        elevation: 0,
+        scrolledUnderElevation: 0,
+      ),
       body: userProfile.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (err, stack) => Center(child: Text('Error: $err')),
@@ -102,34 +109,50 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
           return Form(
             key: _formKey,
             child: ListView(
-              padding: const EdgeInsets.symmetric(vertical: 20),
+              padding: const EdgeInsets.symmetric(vertical: 24),
+              physics: const BouncingScrollPhysics(),
               children: [
                 Center(
                   child: Stack(
                     children: [
-                      CircleAvatar(
-                        radius: 60,
-                        backgroundImage: _imageFile != null
-                            ? FileImage(_imageFile!)
-                            : (avatarUrl != null ? NetworkImage(avatarUrl) : null) as ImageProvider?,
-                        child: (avatarUrl == null && _imageFile == null) ? const Icon(Icons.person, size: 60) : null,
+                      Container(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(color: Colors.grey.shade200, width: 4),
+                        ),
+                        child: CircleAvatar(
+                          radius: 60,
+                          backgroundColor: Colors.grey.shade100,
+                          backgroundImage: _imageFile != null
+                              ? FileImage(_imageFile!)
+                              : (avatarUrl != null ? NetworkImage(avatarUrl) : null) as ImageProvider?,
+                          child: (avatarUrl == null && _imageFile == null)
+                              ? Icon(Icons.person, size: 60, color: Colors.grey.shade400)
+                              : null,
+                        ),
                       ),
                       Positioned(
                         bottom: 0,
-                        right: 0,
-                        child: CircleAvatar(
-                          radius: 20,
-                          backgroundColor: Theme.of(context).colorScheme.secondary,
-                          child: IconButton(
-                            icon: const Icon(Icons.camera_alt, size: 22),
-                            onPressed: isLoading ? null : _pickImage,
+                        right: 4,
+                        child: GestureDetector(
+                          onTap: isLoading ? null : _pickImage,
+                          child: Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).colorScheme.secondary,
+                              shape: BoxShape.circle,
+                              border: Border.all(color: Colors.white, width: 3),
+                            ),
+                            child: const Icon(Icons.camera_alt, size: 20, color: Colors.white),
                           ),
                         ),
                       ),
                     ],
                   ),
                 ),
-                const SizedBox(height: 30),
+
+                const SizedBox(height: 40),
+
                 PrimaryTextfield(
                   label: "Nama",
                   hintText: "Masukkan nama anda",
@@ -139,7 +162,6 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                 ),
 
                 if (isStudent) ...[
-                  const SizedBox(height: 12),
                   PrimaryTextfield(
                     label: "NIM",
                     hintText: "Masukan NIM anda",
@@ -147,14 +169,12 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                     controller: _nimController,
                     validator: (value) => value == null || value.isEmpty ? 'NIM tidak boleh kosong' : null,
                   ),
-                  const SizedBox(height: 12),
                   PrimaryTextfield(
                     label: "Fakultas",
                     hintText: "Masukkan fakultas anda",
                     obscureText: false,
                     controller: _facultyController,
                   ),
-                  const SizedBox(height: 12),
                   PrimaryTextfield(
                     label: "Program Studi",
                     hintText: "Masukkan program studi anda",
@@ -163,10 +183,15 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                   ),
                 ],
 
-                const SizedBox(height: 30),
-                PrimaryButton(
-                  text: isLoading ? "Memperbarui..." : "Perbarui Profil",
-                  onTap: isLoading ? null : () => _updateProfile(isStudent),
+                const SizedBox(height: 20),
+
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 20),
+                  child: PrimaryButton(
+                    text: isLoading ? "Memperbarui..." : "Perbarui Profil",
+                    color: Theme.of(context).colorScheme.primary,
+                    onTap: isLoading ? null : () => _updateProfile(isStudent),
+                  ),
                 ),
               ],
             ),

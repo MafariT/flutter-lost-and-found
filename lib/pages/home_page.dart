@@ -30,40 +30,59 @@ class _HomePageState extends ConsumerState<HomePage> {
   @override
   Widget build(BuildContext context) {
     final isGuest = ref.watch(isGuestProvider);
+
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.surface,
-
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        title: Text(
+          _selectedIndex == 0 ? "Barang Hilang" : "Barang Ditemukan",
+          style: const TextStyle(fontWeight: FontWeight.w800, letterSpacing: 0.5),
+        ),
         elevation: 0,
-        foregroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text("Lost & Found"),
-        centerTitle: true,
+        scrolledUnderElevation: 0,
       ),
-
       drawer: isGuest ? GuestDrawer() : PrimaryDrawer(),
+      body: _widgetOptions.elementAt(_selectedIndex),
 
-      body: Center(child: _widgetOptions.elementAt(_selectedIndex)),
-
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(icon: Icon(Icons.search_off), label: 'Lost Items'),
-          BottomNavigationBarItem(icon: Icon(Icons.check_circle_outline), label: 'Found Items'),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Theme.of(context).colorScheme.inversePrimary,
-        unselectedItemColor: Theme.of(context).colorScheme.primary,
-        onTap: _onItemTapped,
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(color: Colors.white),
+        child: BottomNavigationBar(
+          elevation: 0,
+          backgroundColor: Colors.transparent,
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.search_off_rounded),
+              activeIcon: Icon(Icons.search_off_rounded),
+              label: 'Lost',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.check_circle_outline_rounded),
+              activeIcon: Icon(Icons.check_circle_rounded),
+              label: 'Found',
+            ),
+          ],
+          currentIndex: _selectedIndex,
+          selectedItemColor: Theme.of(context).colorScheme.primary,
+          unselectedItemColor: Colors.grey.shade400,
+          selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+          showUnselectedLabels: true,
+          type: BottomNavigationBarType.fixed,
+          onTap: _onItemTapped,
+        ),
       ),
 
       floatingActionButton: isGuest
           ? null
-          : FloatingActionButton(
+          : FloatingActionButton.extended(
               onPressed: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => const AddItemPage()));
               },
-              backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-              child: Icon(Icons.add, color: Theme.of(context).colorScheme.surface),
+              backgroundColor: Theme.of(context).colorScheme.primary,
+              elevation: 4,
+              icon: const Icon(Icons.add_rounded, color: Colors.white),
+              label: const Text(
+                "Lapor",
+                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              ),
             ),
     );
   }

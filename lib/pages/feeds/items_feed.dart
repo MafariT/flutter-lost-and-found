@@ -14,20 +14,20 @@ class ItemsFeed extends ConsumerWidget {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: TextField(
-            onChanged: (query) {
-              ref.read(searchQueryProvider.notifier).updateQuery(query);
-            },
-            decoration: InputDecoration(
-              hintText: 'Cari barang ...',
-              prefixIcon: const Icon(Icons.search),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(20),
-                borderSide: BorderSide.none,
+          padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+          child: Container(
+            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(30)),
+            child: TextField(
+              onChanged: (query) {
+                ref.read(searchQueryProvider.notifier).updateQuery(query);
+              },
+              decoration: InputDecoration(
+                hintText: 'Cari barang...',
+                hintStyle: TextStyle(color: Colors.grey.shade400),
+                prefixIcon: Icon(Icons.search_rounded, color: Theme.of(context).colorScheme.primary),
+                contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                filled: false,
               ),
-              filled: true,
-              fillColor: Theme.of(context).colorScheme.secondary,
             ),
           ),
         ),
@@ -35,30 +35,32 @@ class ItemsFeed extends ConsumerWidget {
         Expanded(
           child: itemsAsyncValue.when(
             loading: () => const Center(child: CircularProgressIndicator()),
-            
-            error: (error, stack) {
-              return Center(child: Text('Error: $error'));
-            },
+            error: (error, stack) => Center(child: Text('Error: $error')),
             data: (items) {
               if (items.isEmpty) {
                 return RefreshIndicator(
                   onRefresh: () => ref.refresh(itemsFeedProvider(status).future),
                   child: ListView(
-                    children: const [
+                    children: [
+                      SizedBox(height: MediaQuery.of(context).size.height * 0.2),
                       Center(
-                        child: Padding(
-                          padding: EdgeInsets.all(48.0),
-                          child: Text('Barang tidak ditemukan.'),
+                        child: Column(
+                          children: [
+                            Icon(Icons.inbox_rounded, size: 60, color: Colors.grey.shade300),
+                            const SizedBox(height: 16),
+                            Text('Barang tidak ditemukan', style: TextStyle(color: Colors.grey.shade500, fontSize: 16)),
+                          ],
                         ),
-                      )
+                      ),
                     ],
                   ),
                 );
               }
-              
               return RefreshIndicator(
+                color: Theme.of(context).colorScheme.primary,
                 onRefresh: () => ref.refresh(itemsFeedProvider(status).future),
                 child: ListView.builder(
+                  padding: const EdgeInsets.only(bottom: 80),
                   itemCount: items.length,
                   itemBuilder: (context, index) {
                     final item = items[index];

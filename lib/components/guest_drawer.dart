@@ -7,40 +7,60 @@ class GuestDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      backgroundColor: Theme.of(context).colorScheme.surface,
-      child: ListView(
-        padding: EdgeInsets.zero,
-        children: <Widget>[
-          DrawerHeader(
-            decoration: BoxDecoration(color: Theme.of(context).colorScheme.secondary),
+      backgroundColor: Colors.white,
+      child: Column(
+        children: [
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.only(top: 60, bottom: 30, left: 20, right: 20),
+            decoration: BoxDecoration(color: Theme.of(context).colorScheme.primary),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                CircleAvatar(
-                  radius: 30,
-                  backgroundColor: Theme.of(context).colorScheme.tertiary,
-                  child: Icon(Icons.person, size: 40, color: Theme.of(context).colorScheme.primary),
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  'Selamat datang!',
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.inversePrimary,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
+                Container(
+                  padding: const EdgeInsets.all(3),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(color: Colors.white, width: 2),
                   ),
+                  child: CircleAvatar(
+                    radius: 35,
+                    child: const Icon(Icons.person_outline, size: 40, color: Colors.white),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                const Text(
+                  'Selamat datang!',
+                  style: TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold),
                 ),
               ],
             ),
           ),
-          ListTile(
-            leading: const Icon(Icons.login),
-            title: const Text('Login atau Daftar'),
-            subtitle: const Text('Buat akun untuk lapor dan claim barang'),
-            onTap: () {
-              AuthService().signOut();
-            },
+
+          Expanded(
+            child: ListView(
+              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+              children: <Widget>[
+                Container(
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.primary.withAlpha(20),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: ListTile(
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                    leading: Icon(Icons.login_rounded, color: Theme.of(context).colorScheme.primary),
+                    title: Text(
+                      'Login atau Daftar',
+                      style: TextStyle(color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.bold),
+                    ),
+                    subtitle: const Text('Buat akun untuk lapor dan claim barang'),
+                    onTap: () {
+                      AuthService().signOut();
+                    },
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),

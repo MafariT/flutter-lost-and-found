@@ -25,7 +25,6 @@ class ItemDetailPage extends ConsumerWidget {
           controller: messageController,
           decoration: InputDecoration(labelText: 'Pesan claim', hintText: hint),
           maxLines: 3,
-          autofocus: true,
         ),
         actions: [
           TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
@@ -48,7 +47,6 @@ class ItemDetailPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final isGuest = ref.watch(isGuestProvider);
     final buttonState = ref.watch(claimStatusProvider(item['id'] as String));
-    final claimsController = ref.read(claimsControllerProvider.notifier);
 
     ref.listen<AsyncValue<void>>(claimsControllerProvider, (previous, next) {
       if (next is AsyncError) {
@@ -72,142 +70,210 @@ class ItemDetailPage extends ConsumerWidget {
 
     String formattedDate = 'Waktu tidak diketahui';
     if (createdAt.isNotEmpty) {
-      initializeDateFormatting('id', null);
-      final parsedDate = DateTime.parse(createdAt).toUtc().add(const Duration(hours: 7)); // UTC+7
-      formattedDate = formattedDate = DateFormat('EEEE, dd MMMM yyyy - HH:mm WIB', 'id').format(parsedDate);
+      try {
+        initializeDateFormatting('id', null);
+        final parsedDate = DateTime.parse(createdAt).toUtc().add(const Duration(hours: 7)); // UTC+7
+        formattedDate = formattedDate = DateFormat('EEEE, dd MMMM yyyy - HH:mm WIB', 'id').format(parsedDate);
+      } catch (_) {}
     }
 
     return Scaffold(
+      backgroundColor: Colors.white,
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
-            expandedHeight: 300.0,
+            expandedHeight: 350.0,
             pinned: true,
+            backgroundColor: Theme.of(context).colorScheme.primary,
+            leading: Container(
+              margin: const EdgeInsets.all(8),
+              decoration: BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+              child: IconButton(
+                icon: const Icon(Icons.arrow_back, color: Colors.black),
+                onPressed: () => Navigator.pop(context),
+              ),
+            ),
             flexibleSpace: FlexibleSpaceBar(
-              background: (imageUrl != null && imageUrl.isNotEmpty)
-                  ? Image.network(imageUrl, fit: BoxFit.cover)
-                  : Container(
-                      color: Theme.of(context).colorScheme.secondary,
-                      child: const Center(child: Icon(Icons.image_not_supported, size: 60)),
+              background: Stack(
+                fit: StackFit.expand,
+                children: [
+                  (imageUrl != null && imageUrl.isNotEmpty)
+                      ? Image.network(imageUrl, fit: BoxFit.cover)
+                      : Container(
+                          color: Colors.grey.shade100,
+                          child: Icon(Icons.image_not_supported, size: 60, color: Colors.grey.shade300),
+                        ),
+                  Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [Colors.transparent, Colors.black38],
+                        stops: const [0.8, 1.0],
+                      ),
                     ),
+                  ),
+                  Positioned(
+                    bottom: 20,
+                    left: 20,
+                    right: 20,
+                    child: Text(
+                      itemName,
+                      style: const TextStyle(color: Colors.white, fontSize: 28, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
           SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(24.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(itemName, style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-                  const SizedBox(height: 8),
-                  Text(description, style: const TextStyle(fontSize: 16, height: 1.5)),
-                  const Divider(height: 40),
-                  _buildDetailRow(context, Icons.location_on_outlined, 'Lokasi', location),
-                  const SizedBox(height: 16),
-                  _buildDetailRow(context, Icons.calendar_today_outlined, 'Tanggal dilaporkan', formattedDate),
-                  const SizedBox(height: 40),
+                  _buildMetaChip(context, Icons.calendar_today, formattedDate),
+                  const SizedBox(height: 10),
+                  _buildMetaChip(context, Icons.location_on, location),
+
+                  const SizedBox(height: 20),
+
+                  const Text(
+                    'Deskripsi barang',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black87),
+                  ),
+                  const SizedBox(height: 12),
+                  Text(description, style: const TextStyle(fontSize: 16, height: 1.6, color: Color(0xFF555555))),
+
+                  const SizedBox(height: 100),
                 ],
               ),
             ),
           ),
         ],
       ),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: isGuest
-            ? _buildActionButton(context: context, text: 'Login / Daftar', onPressed: () {})
-            : buttonState.when(
-                loading: () => const Center(child: CircularProgressIndicator()),
-                error: (err, stack) => Center(child: Text('Error: $err')),
-                data: (status) {
-                  switch (status) {
-                    case 'can_claim':
-                      return _buildActionButton(
-                        context: context,
-                        text: 'Claim Barang',
-                        onPressed: () => _showDialog(
+      bottomNavigationBar: Container(
+        padding: const EdgeInsets.all(20.0),
+        child: SafeArea(
+          child: isGuest
+              ? ElevatedButton(
+                  onPressed: null,
+                  style: ElevatedButton.styleFrom(backgroundColor: Colors.grey.shade300),
+                  child: const Text("Login / Daftar", style: TextStyle(color: Colors.grey)),
+                )
+              : buttonState.when(
+                  loading: () => const Center(child: CircularProgressIndicator()),
+                  error: (err, stack) => Text('Error: $err'),
+                  data: (status) {
+                    final claimsController = ref.read(claimsControllerProvider.notifier);
+                    switch (status) {
+                      case 'can_claim':
+                        return _buildActionButton(
                           context,
-                          ref,
-                          title: 'Claim barang ini',
-                          hint: 'Misalnya: "Izin Claim pak saya kehilangan dompet merah di FST gedung B"',
-                          onSubmit: (message) => claimsController.submitClaim(
-                            itemId: item['id'],
-                            finderId: item['user_id'],
-                            message: message,
+                          text: 'Claim Barang',
+                          color: Theme.of(context).colorScheme.primary,
+                          onPressed: () => _showDialog(
+                            context,
+                            ref,
+                            title: 'Claim Barang ini',
+                            hint: 'Misalnya: "Izin Claim pak saya kehilangan dompet merah di FST gedung B"',
+                            onSubmit: (message) => claimsController.submitClaim(
+                              itemId: item['id'],
+                              finderId: item['user_id'],
+                              message: message,
+                            ),
                           ),
-                        ),
-                      );
-                    case 'claim_pending':
-                      return _buildDisabledButton(text: 'Claim Pending', icon: Icons.hourglass_top);
-                    case 'can_contact':
-                      return _buildActionButton(
-                        context: context,
-                        text: 'Laporkan Temuan!',
-                        onPressed: () => _showDialog(
+                        );
+                      case 'can_contact':
+                        return _buildActionButton(
                           context,
-                          ref,
-                          title: 'Saya temukan barang ini!',
-                          hint: 'Misalnya: "Aku dapat ini di depan parkiran, PC Wa aku  08234....."',
-                          onSubmit: (message) => claimsController.submitContact(
-                            itemId: item['id'],
-                            ownerId: item['user_id'],
-                            message: message,
+                          text: 'Laporkan Temuan!',
+                          color: Theme.of(context).colorScheme.primary,
+                          onPressed: () => _showDialog(
+                            context,
+                            ref,
+                            title: 'Saya temukan barang ini!',
+                            hint: 'Misalnya: "Aku dapat ini di depan parkiran, PC Wa aku  08234....."',
+                            onSubmit: (message) => claimsController.submitContact(
+                              itemId: item['id'],
+                              ownerId: item['user_id'],
+                              message: message,
+                            ),
                           ),
-                        ),
-                      );
-                    case 'contacted':
-                      return _buildDisabledButton(text: 'Pemilik telah diberitahu', icon: Icons.check_circle);
-                    case 'rejected':
-                      return _buildDisabledButton(text: 'Claim anda ditolak', icon: Icons.cancel_outlined);
-                    default:
-                      return const SizedBox.shrink();
-                  }
-                },
-              ),
-      ),
-    );
-  }
-
-  Widget _buildDetailRow(BuildContext context, IconData icon, String title, String content) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Icon(icon, color: Theme.of(context).colorScheme.primary, size: 24),
-        const SizedBox(width: 16),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(title, style: TextStyle(color: Theme.of(context).colorScheme.primary)),
-              const SizedBox(height: 4),
-              Text(content, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-            ],
-          ),
+                        );
+                      case 'claim_pending':
+                        return _buildDisabledButton('Claim Pending', Icons.hourglass_top);
+                      case 'rejected':
+                        return _buildDisabledButton('Claim anda ditolak', Icons.cancel_outlined);
+                      case 'contacted':
+                        return _buildDisabledButton('Pemilik telah diberitahu', Icons.check_circle);
+                      default:
+                        return const SizedBox.shrink();
+                    }
+                  },
+                ),
         ),
-      ],
-    );
-  }
-
-  Widget _buildActionButton({required BuildContext context, required String text, required VoidCallback onPressed}) {
-    return ElevatedButton(
-      onPressed: onPressed,
-      style: ElevatedButton.styleFrom(
-        padding: const EdgeInsets.symmetric(vertical: 16),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        foregroundColor: Theme.of(context).colorScheme.surface,
       ),
-      child: Text(text, style: const TextStyle(fontSize: 18)),
     );
   }
 
-  Widget _buildDisabledButton({required String text, required IconData icon}) {
-    return ElevatedButton.icon(
-      onPressed: null,
-      icon: Icon(icon, color: Colors.white),
-      label: Text(text, style: const TextStyle(color: Colors.white)),
-      style: ElevatedButton.styleFrom(
-        padding: const EdgeInsets.symmetric(vertical: 16),
-        disabledBackgroundColor: Colors.grey.shade600,
+  Widget _buildMetaChip(BuildContext context, IconData icon, String label) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(color: Colors.grey.shade100, borderRadius: BorderRadius.circular(12)),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 16, color: Theme.of(context).colorScheme.secondary),
+          const SizedBox(width: 8),
+          Flexible(
+            child: Text(
+              label,
+              style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: Colors.black87),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildActionButton(
+    BuildContext context, {
+    required String text,
+    required Color color,
+    required VoidCallback onPressed,
+  }) {
+    return SizedBox(
+      height: 55,
+      child: ElevatedButton(
+        onPressed: onPressed,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: color,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          elevation: 0,
+        ),
+        child: Text(
+          text,
+          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDisabledButton(String text, IconData icon) {
+    return SizedBox(
+      height: 55,
+      child: ElevatedButton.icon(
+        onPressed: null,
+        icon: Icon(icon, color: Colors.white),
+        label: Text(text, style: const TextStyle(color: Colors.white)),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.grey.shade400,
+          disabledBackgroundColor: Colors.grey.shade400,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        ),
       ),
     );
   }

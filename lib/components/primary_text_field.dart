@@ -8,42 +8,34 @@ class PrimaryTextfield extends StatelessWidget {
     required this.label,
     required this.controller,
     this.readOnly = false,
-    this.validator,
     this.focusNode,
+    this.validator,
   });
   final String hintText;
   final bool obscureText;
   final String label;
-  final TextEditingController controller;
   final bool readOnly;
-  final String? Function(String?)? validator; 
+  final TextEditingController controller;
   final FocusNode? focusNode;
+  final String? Function(String?)? validator;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
       child: TextFormField(
-        obscureText: obscureText,
         controller: controller,
+        obscureText: obscureText,
         readOnly: readOnly,
+        focusNode: focusNode,
         validator: validator,
+        style: TextStyle(color: Theme.of(context).colorScheme.inversePrimary),
         decoration: InputDecoration(
-          enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-              color: Theme.of(context).colorScheme.surface,
-            ),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-              color: Theme.of(context).colorScheme.secondary,
-            ),
-          ),
-          label: Text(label),
-          fillColor: Theme.of(context).colorScheme.tertiary,
-          filled: true,
+          labelText: label,
           hintText: hintText,
-          hintStyle: TextStyle(color: Theme.of(context).colorScheme.primary),
+          fillColor: Colors.grey.shade100,
+          filled: true,
+          floatingLabelBehavior: FloatingLabelBehavior.auto,
         ),
       ),
     );

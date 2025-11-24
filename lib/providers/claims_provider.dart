@@ -54,14 +54,11 @@ final claimStatusProvider = FutureProvider.family<String, String>((ref, itemId) 
         .limit(1);
 
     if (claims.isNotEmpty) {
-      final latestClaimStatus = claims.first['status'];
-      if (latestClaimStatus == 'pending') {
-        return 'claim_pending';
-      } else if (latestClaimStatus == 'rejected') {
-        return 'rejected';
-      }
-    }
+      final status = claims.first['status'];
 
+      if (status == 'pending') return 'claim_pending';
+      if (status == 'rejected') return 'rejected';
+    }
     return 'can_claim';
   } else if (itemStatus == 'lost') {
     final contacts = await supabase

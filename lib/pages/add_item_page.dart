@@ -135,7 +135,7 @@ class _AddItemPageState extends State<AddItemPage> {
                     ),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 16),
-                      child: Text('Temuan barang'),
+                      child: Text('Menemukan barang'),
                     ),
                   ],
                 ),

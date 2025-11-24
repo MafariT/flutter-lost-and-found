@@ -47,15 +47,6 @@ class SettingsPage extends StatelessWidget {
 
           const _ThemeToggleTile(),
 
-          _SettingsTile(
-            icon: Icons.language_outlined,
-            title: 'Bahasa',
-            subtitle: 'Pilih preferensi bahasa',
-            onTap: () {
-              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Feature coming soon!')));
-            },
-          ),
-
           const _SettingsHeader(title: 'Tentang'),
           _SettingsTile(
             icon: Icons.policy_outlined,

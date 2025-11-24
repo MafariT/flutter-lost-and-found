@@ -47,7 +47,7 @@ class _AddItemPageState extends State<AddItemPage> {
           .getPublicUrl(filePath);
       return response;
     } catch (e) {
-      _showError('Image upload failed: $e');
+      _showError('Gagal mengupload gambar: $e');
       return null;
     }
   }
@@ -77,12 +77,12 @@ class _AddItemPageState extends State<AddItemPage> {
 
       await supabase.from('items').insert(data);
 
-      _showSuccess('Item reported successfully!');
+      _showSuccess('Barang berhasil dilaporkan !');
       if (mounted) {
         Navigator.of(context).pop();
       }
     } catch (e) {
-      _showError('Failed to report item: $e');
+      _showError('Laporan gagal !: $e');
     } finally {
       if (mounted) {
         setState(() {
@@ -111,7 +111,7 @@ class _AddItemPageState extends State<AddItemPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Report an Item')),
+      appBar: AppBar(title: const Text('Lapor Barang')),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -131,11 +131,11 @@ class _AddItemPageState extends State<AddItemPage> {
                   children: const [
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 16),
-                      child: Text('I Lost Something'),
+                      child: Text('Kehilangan barang'),
                     ),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 16),
-                      child: Text('I Found Something'),
+                      child: Text('Temuan barang'),
                     ),
                   ],
                 ),
@@ -175,17 +175,17 @@ class _AddItemPageState extends State<AddItemPage> {
               TextFormField(
                 controller: _nameController,
                 decoration: const InputDecoration(
-                  labelText: 'Item Name',
+                  labelText: 'Nama Barang',
                   border: OutlineInputBorder(),
                 ),
                 validator: (value) =>
-                    value!.isEmpty ? 'Please enter the item name' : null,
+                    value!.isEmpty ? 'Masukkan nama barang' : null,
               ),
               const SizedBox(height: 12),
               TextFormField(
                 controller: _descriptionController,
                 decoration: const InputDecoration(
-                  labelText: 'Description',
+                  labelText: 'Deskripsi',
                   border: OutlineInputBorder(),
                 ),
                 maxLines: 3,
@@ -194,7 +194,7 @@ class _AddItemPageState extends State<AddItemPage> {
               TextFormField(
                 controller: _locationController,
                 decoration: const InputDecoration(
-                  labelText: 'Last Known Location',
+                  labelText: 'Lokasi Terakhir Diketahui',
                   border: OutlineInputBorder(),
                 ),
               ),
@@ -207,7 +207,7 @@ class _AddItemPageState extends State<AddItemPage> {
                 ),
                 child: _isLoading
                     ? const CircularProgressIndicator(color: Colors.white)
-                    : const Text('Submit Report'),
+                    : const Text('Submit Laporan'),
               ),
             ],
           ),

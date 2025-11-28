@@ -16,7 +16,7 @@ class PendingClaimsFeed extends ConsumerWidget {
         if (claims.isEmpty) {
           return RefreshIndicator(
             onRefresh: () => ref.refresh(pendingClaimsProvider.future),
-            child: const Center(child: Text('No pending claims.')),
+            child: const Center(child: Text('Belum ada claim barang.')),
           );
         }
         return RefreshIndicator(
@@ -39,8 +39,8 @@ class PendingClaimsFeed extends ConsumerWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text("Claimant's Message:", style: TextStyle(fontWeight: FontWeight.bold)),
-                          Text(claim['claimant_message'] ?? 'No message provided.'),
+                          const Text("Pesan Claim:", style: TextStyle(fontWeight: FontWeight.bold)),
+                          Text(claim['claimant_message'] ?? 'Tidak ada Pesan.'),
                           const Divider(height: 20),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
@@ -48,14 +48,14 @@ class PendingClaimsFeed extends ConsumerWidget {
                               TextButton(
                                 onPressed: () =>
                                     ref.read(perantaraControllerProvider.notifier).rejectClaim(claim['id']),
-                                child: const Text('Reject', style: TextStyle(color: Colors.red)),
+                                child: const Text('Tolak', style: TextStyle(color: Colors.red)),
                               ),
                               const SizedBox(width: 8),
                               ElevatedButton(
                                 onPressed: () => ref
                                     .read(perantaraControllerProvider.notifier)
                                     .approveClaim(claim['id'], item['id']),
-                                child: const Text('Approve'),
+                                child: const Text('Terima Claim'),
                               ),
                             ],
                           ),

@@ -16,7 +16,7 @@ class PendingItemsFeed extends ConsumerWidget {
         if (items.isEmpty) {
           return RefreshIndicator(
             onRefresh: () => ref.refresh(pendingItemsProvider.future),
-            child: const Center(child: Text('No new items to review.')),
+            child: const Center(child: Text('Tidak ada laporan temuan barang.')),
           );
         }
         return RefreshIndicator(
@@ -28,8 +28,8 @@ class PendingItemsFeed extends ConsumerWidget {
               return Card(
                 margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 child: ListTile(
-                  title: Text(item['item_name']),
-                  subtitle: Text(item['description'] ?? 'No description'),
+                  title: Text(item['Nama Barang']),
+                  subtitle: Text(item['Deskripsi'] ?? 'Tidak terdeskripsi'),
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [

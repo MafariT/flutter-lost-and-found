@@ -34,20 +34,20 @@ class _PerantaraHomePageState extends ConsumerState<PerantaraHomePage> {
       if (previous is AsyncLoading && next is AsyncData) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(const SnackBar(content: Text('Action successful!'), backgroundColor: Colors.green));
+        ).showSnackBar(const SnackBar(content: Text('Berhasil!'), backgroundColor: Colors.green));
         ref.invalidate(pendingItemsProvider);
         ref.invalidate(pendingClaimsProvider);
       }
     });
 
     return Scaffold(
-      appBar: AppBar(title: Text(_selectedIndex == 0 ? "Review New Items" : "Manage Claims"), centerTitle: true),
+      appBar: AppBar(title: Text(_selectedIndex == 0 ? "Kelola Barang Temuan" : "Kelola Claim Barang"), centerTitle: true),
       drawer: const PrimaryDrawer(),
       body: Center(child: _widgetOptions.elementAt(_selectedIndex)),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(icon: Icon(Icons.inventory_2_outlined), label: 'New Items'),
-          BottomNavigationBarItem(icon: Icon(Icons.rule_folder_outlined), label: 'Claims'),
+          BottomNavigationBarItem(icon: Icon(Icons.inventory_2_outlined), label: 'Barang Temuan'),
+          BottomNavigationBarItem(icon: Icon(Icons.rule_folder_outlined), label: 'Claim Barang'),
         ],
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,

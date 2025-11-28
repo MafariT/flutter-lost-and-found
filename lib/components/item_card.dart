@@ -14,6 +14,7 @@ class ItemCard extends StatelessWidget {
     final String? imageUrl = item['image_url'];
     final String status = item['status'] ?? 'unknown';
     final DateTime createdAt = DateTime.parse(item['created_at']);
+    timeago.setLocaleMessages('id', timeago.IdMessages());
 
     Color statusColor;
     String statusText;
@@ -89,7 +90,10 @@ class ItemCard extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                      Text(timeago.format(createdAt), style: TextStyle(fontSize: 12, color: Colors.grey.shade500)),
+                      Text(
+                        timeago.format(createdAt, locale: 'id'),
+                        style: TextStyle(fontSize: 12, color: Colors.grey.shade500),
+                      ),
                     ],
                   ),
                   const SizedBox(height: 6),

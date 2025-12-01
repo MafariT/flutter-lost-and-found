@@ -9,72 +9,109 @@ class AdminHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.surface,
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        foregroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text("Admin Dashboard"),
+        title: const Text(
+          "Admin Dashboard",
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black87),
+        ),
         centerTitle: true,
+        backgroundColor: Colors.white,
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        iconTheme: const IconThemeData(color: Colors.black87),
       ),
       drawer: const PrimaryDrawer(),
-      body: GridView.count(
-        crossAxisCount: 2,
-        padding: const EdgeInsets.all(16.0),
-        mainAxisSpacing: 10,
-        crossAxisSpacing: 10,
-        children: [
-          _buildDashboardCard(
-            context,
-            icon: Icons.people_outline,
-            label: 'Manage Users',
-            onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => const AdminUserListPage()));
-            },
-          ),
-          _buildDashboardCard(
-            context,
-            icon: Icons.inventory_2_outlined,
-            label: 'Manage Items',
-            onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => const AdminItemListPage()));
-            },
-          ),
-          _buildDashboardCard(
-            context,
-            icon: Icons.analytics_outlined,
-            label: 'View Stats',
-            onTap: () {
-              /* TODO: Navigate to statistics page */
-            },
-          ),
-        ],
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: ListView(
+                children: [
+                  _card(
+                    context,
+                    icon: Icons.people_alt_outlined,
+                    label: 'Kelola User',
+                    subLabel: 'Ubah Role & Akses Pengguna',
+                    color: Colors.blue,
+                    onTap: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => const AdminUserListPage()));
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                  _card(
+                    context,
+                    icon: Icons.inventory_2_outlined,
+                    label: 'Kelola Barang',
+                    subLabel: 'Hapus Postingan & Moderasi',
+                    color: Colors.orange,
+                    onTap: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => const AdminItemListPage()));
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                  _card(
+                    context,
+                    icon: Icons.analytics_outlined,
+                    label: 'Statistik',
+                    subLabel: 'Lihat Laporan Aktivitas',
+                    color: Colors.purple,
+                    onTap: () {
+                      ScaffoldMessenger.of(
+                        context,
+                      ).showSnackBar(const SnackBar(content: Text("Fitur akan segera hadir")));
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildDashboardCard(
+  Widget _card(
     BuildContext context, {
     required IconData icon,
     required String label,
+    required String subLabel,
     required VoidCallback onTap,
+    required Color color,
   }) {
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(12),
-        onTap: onTap,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(16),
+      child: Container(
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: Colors.grey.shade200, width: 1.5),
+        ),
+        child: Row(
           children: [
-            Icon(icon, size: 48, color: Theme.of(context).colorScheme.primary),
-            const SizedBox(height: 12),
-            Text(
-              label,
-              textAlign: TextAlign.center,
-              style: const TextStyle(fontWeight: FontWeight.bold),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(color: color.withOpacity(0.1), shape: BoxShape.circle),
+              child: Icon(icon, size: 28, color: color),
             ),
+            const SizedBox(width: 20),
+
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(label, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                  const SizedBox(height: 4),
+                  Text(subLabel, style: TextStyle(color: Colors.grey.shade500, fontSize: 13)),
+                ],
+              ),
+            ),
+
+            Icon(Icons.arrow_forward_ios_rounded, size: 16, color: Colors.grey.shade300),
           ],
         ),
       ),

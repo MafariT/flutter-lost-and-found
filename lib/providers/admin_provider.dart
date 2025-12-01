@@ -30,5 +30,10 @@ final adminUserListProvider = FutureProvider<List<Map<String, dynamic>>>((ref) a
 });
 
 final adminItemListProvider = FutureProvider<List<Map<String, dynamic>>>((ref) async {
-  return await supabase.from('items').select().order('created_at', ascending: false);
+  return await supabase
+      .from('items')
+      .select()
+      .neq('status', 'claimed')
+      .neq('status', 'returned')
+      .order('created_at', ascending: false);
 });

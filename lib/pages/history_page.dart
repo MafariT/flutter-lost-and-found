@@ -120,7 +120,7 @@ class _FlatHistoryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final status = item['status'];
-    final bool isFinished = status == 'returned' || status == 'claimed';
+    final statusInfo = _getStatusInfo(context, status);
 
     return Container(
       decoration: BoxDecoration(
@@ -164,16 +164,20 @@ class _FlatHistoryCard extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
-                        color: isFinished ? Colors.green.shade50 : Colors.orange.shade50,
+                        color: statusInfo.color.withAlpha(20),
                         borderRadius: BorderRadius.circular(6),
+                        border: Border.all(color: statusInfo.color.withAlpha(60)),
                       ),
-                      child: Text(
-                        status.toUpperCase().replaceAll('_', ' '),
-                        style: TextStyle(
-                          fontSize: 10,
-                          fontWeight: FontWeight.bold,
-                          color: isFinished ? Colors.green.shade700 : Colors.orange.shade800,
-                        ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(statusInfo.icon, size: 12, color: statusInfo.color),
+                          const SizedBox(width: 4),
+                          Text(
+                            statusInfo.label,
+                            style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: statusInfo.color),
+                          ),
+                        ],
                       ),
                     ),
                   ],
@@ -336,4 +340,28 @@ class _ActivityBottomSheetContent extends ConsumerWidget {
       ),
     );
   }
+}
+
+_StatusInfo _getStatusInfo(BuildContext context, String status) {
+  switch (status) {
+    case 'lost':
+      return _StatusInfo('Kehilangan (Aktif)', Icons.search, Colors.red);
+    case 'unverified_found':
+      return _StatusInfo('Menunggu Verifikasi', Icons.hourglass_top, Colors.orange);
+    case 'found':
+      return _StatusInfo('Menemukan (Aktif)', Icons.check_circle_outline, Colors.blue);
+    case 'returned':
+      return _StatusInfo('Sudah Dikembalikan', Icons.task_alt, Colors.green);
+    case 'claimed':
+      return _StatusInfo('Selesai (Diklaim)', Icons.done_all, Colors.grey);
+    default:
+      return _StatusInfo(status, Icons.info_outline, Colors.grey);
+  }
+}
+
+class _StatusInfo {
+  final String label;
+  final IconData icon;
+  final Color color;
+  _StatusInfo(this.label, this.icon, this.color);
 }

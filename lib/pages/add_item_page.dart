@@ -163,6 +163,50 @@ class _AddItemPageState extends State<AddItemPage> {
 
                     const SizedBox(height: 24),
 
+                    if (_status == 'found') ...[
+                      Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: Colors.orange.shade50,
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: Colors.orange.shade200),
+                        ),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Icon(Icons.info_outline_rounded, color: Colors.orange.shade800),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Penting!",
+                                    style: TextStyle(fontWeight: FontWeight.bold, color: Colors.orange.shade900),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    "Harap serahkan barang fisik ke Pos Satpam agar aman",
+                                    style: TextStyle(color: Colors.orange.shade900, height: 1.4),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    "Satpam akan memverifikasi postingan ini setelah barang diterima",
+                                    style: TextStyle(
+                                      color: Colors.orange.shade700,
+                                      fontSize: 12,
+                                      fontStyle: FontStyle.italic,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 24),
+                    ],
+
                     GestureDetector(
                       onTap: _pickImage,
                       child: AnimatedContainer(

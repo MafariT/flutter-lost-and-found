@@ -85,9 +85,53 @@ class _AddItemPageState extends State<AddItemPage> {
 
       await supabase.from('items').insert(data);
 
-      _showSuccess('Barang berhasil dilaporkan!');
       if (mounted) {
-        Navigator.of(context).pop();
+        await showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) => AlertDialog(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            title: Row(
+              children: [
+                Icon(
+                  _status == 'found' ? Icons.shield_outlined : Icons.check_circle_outline,
+                  color: _status == 'found' ? Colors.orange : Colors.green,
+                ),
+                const SizedBox(width: 8),
+                const Text("Laporan Diterima"),
+              ],
+            ),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  _status == 'found'
+                      ? "Terima kasih sudah melaporkan barang yang hilang, Langkah selanjutnya:"
+                      : "Laporan kehilangan Anda sudah tampil di aplikasi",
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 12),
+                if (_status == 'found') ...[
+                  _buildStep(1, "Serahkan barang ke Pos Satpam terdekat"),
+                  _buildStep(2, "Satpam akan memverifikasi foto dan barang fisik"),
+                  _buildStep(3, "Setelah terverifikasi, barang akan muncul di aplikasi"),
+                ] else ...[
+                  const Text("Untuk mengetahui apakah barang Anda sudah ditemukan, pantau terus menu 'Riwayat'"),
+                ],
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                },
+                child: const Text("OK", style: TextStyle(fontWeight: FontWeight.bold)),
+              ),
+            ],
+          ),
+        );
       }
     } catch (e) {
       _showError('Laporan gagal!: $e');
@@ -337,4 +381,22 @@ class _TypeSelector extends StatelessWidget {
       ),
     );
   }
+}
+
+Widget _buildStep(int number, String text) {
+  return Padding(
+    padding: const EdgeInsets.only(bottom: 8.0),
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          padding: const EdgeInsets.all(6),
+          decoration: BoxDecoration(color: Colors.grey.shade200, shape: BoxShape.circle),
+          child: Text("$number", style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),
+        ),
+        const SizedBox(width: 12),
+        Expanded(child: Text(text, style: const TextStyle(fontSize: 13))),
+      ],
+    ),
+  );
 }

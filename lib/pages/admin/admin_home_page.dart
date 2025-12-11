@@ -51,19 +51,6 @@ class AdminHomePage extends StatelessWidget {
                       Navigator.push(context, MaterialPageRoute(builder: (context) => const AdminItemListPage()));
                     },
                   ),
-                  const SizedBox(height: 16),
-                  _card(
-                    context,
-                    icon: Icons.analytics_outlined,
-                    label: 'Statistik',
-                    subLabel: 'Lihat Laporan Aktivitas',
-                    color: Colors.purple,
-                    onTap: () {
-                      ScaffoldMessenger.of(
-                        context,
-                      ).showSnackBar(const SnackBar(content: Text("Fitur akan segera hadir")));
-                    },
-                  ),
                 ],
               ),
             ),

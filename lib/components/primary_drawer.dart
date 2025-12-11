@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_lost_and_found/main.dart';
 import 'package:flutter_lost_and_found/pages/history_page.dart';
 import 'package:flutter_lost_and_found/pages/settings_page.dart';
 import 'package:flutter_lost_and_found/providers/user_provider.dart';
@@ -11,6 +12,8 @@ class PrimaryDrawer extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final profileAsyncValue = ref.watch(userProfileProvider);
+    final userRole = supabase.auth.currentUser?.appMetadata['role'] ?? 'user';
+    final isStudent = userRole == 'user';
 
     return Drawer(
       backgroundColor: Colors.white,
@@ -63,14 +66,15 @@ class PrimaryDrawer extends ConsumerWidget {
             child: ListView(
               padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
               children: <Widget>[
-                _DrawerTile(
-                  icon: Icons.history_rounded,
-                  title: 'Riwayat',
-                  onTap: () {
-                    Navigator.pop(context);
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => const HistoryPage()));
-                  },
-                ),
+                if (isStudent)
+                  _DrawerTile(
+                    icon: Icons.history_rounded,
+                    title: 'Riwayat',
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => const HistoryPage()));
+                    },
+                  ),
                 _DrawerTile(
                   icon: Icons.settings_outlined,
                   title: 'Pengaturan',

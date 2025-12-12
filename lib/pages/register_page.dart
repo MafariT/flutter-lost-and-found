@@ -54,15 +54,15 @@ class _RegisterPageState extends State<RegisterPage> {
       backgroundColor: Theme.of(context).colorScheme.surface,
       body: Stack(
         children: [
-          Container(
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/images/splash-background.png'),
-                fit: BoxFit.cover,
-                opacity: 0.4,
-              ),
-            ),
-          ),
+          // Container(
+          //   decoration: const BoxDecoration(
+          //     image: DecorationImage(
+          //       image: AssetImage('assets/images/splash-background.png'),
+          //       fit: BoxFit.cover,
+          //       opacity: 0.4,
+          //     ),
+          //   ),
+          // ),
           Center(
             child: SingleChildScrollView(
               child: Form(
@@ -128,7 +128,11 @@ class _RegisterPageState extends State<RegisterPage> {
                           onTap: widget.onTap,
                           child: Text(
                             "Masuk disini",
-                            style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.primary),
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
                           ),
                         ),
                       ],

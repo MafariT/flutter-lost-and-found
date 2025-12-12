@@ -50,15 +50,15 @@ class _LoginPageState extends State<LoginPage> {
       backgroundColor: Theme.of(context).colorScheme.surface,
       body: Stack(
         children: [
-          Container(
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/images/splash-background.png'),
-                fit: BoxFit.cover,
-                opacity: 0.4,
-              ),
-            ),
-          ),
+          // Container(
+          //   decoration: const BoxDecoration(
+          //     image: DecorationImage(
+          //       image: AssetImage('assets/images/splash-background.png'),
+          //       fit: BoxFit.cover,
+          //       opacity: 0.4,
+          //     ),
+          //   ),
+          // ),
           Center(
             child: SingleChildScrollView(
               child: Form(
